@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Save the Date · Trisa &amp; Charles</title>
+<meta name="description" content="Save the date: Trisa and Charles are getting married June 26, 2027 in Houston. Send us your mailing address.">
+<meta property="og:title" content="Save the Date · Trisa &amp; Charles">
+<meta property="og:description" content="June 26, 2027 · Houston, Texas. Send us your mailing address for your invitation.">
+<meta property="og:image" content="https://trisaandcharleswedding.com/assets/img/closeup.jpg">
+<meta property="og:url" content="https://trisaandcharleswedding.com/save-the-date/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <a href="/">Home</a>
+  <a href="/save-the-date/" aria-current="page">Save the Date</a>
+  <a href="/rsvp/">RSVP</a>
+</nav>
+
+<main class="wrap">
+  <img class="print hero-img"
+       src="/assets/img/closeup.jpg"
+       srcset="/assets/img/closeup-800.jpg 533w, /assets/img/closeup.jpg 1067w"
+       sizes="(max-width: 720px) 100vw, 720px"
+       width="1067" height="1600"
+       alt="Charles tenderly holding Trisa's chin as she looks up at him">
+
+  <section class="card overlap">
+    <h1 class="heading gold">Save the Date<span class="vi">Lưu ngày vui</span></h1> <!-- VI: needs proofreading -->
+    <h2 class="names gold"><span>Trisa &amp; Charles</span></h2>
+    <p class="date">June 26, 2027<br>Houston, Texas</p>
+    <p>We're getting married, and we'd love to send you a proper invitation. Please share your mailing address below.</p>
+  </section>
+
+  <section class="card wine" id="form">
+    <h2 class="gold">Your Address<span class="vi">Địa chỉ của bạn</span></h2> <!-- VI: needs proofreading -->
+
+    <form data-form="address">
+      <input type="hidden" name="form" value="address">
+      <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="field"><label for="name">Name(s), as you'd like them on the envelope</label>
+        <input id="name" name="name" type="text" required autocomplete="name"></div>
+      <div class="field"><label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="phone">Phone <span class="opt">(optional)</span></label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="address1">Street address</label>
+        <input id="address1" name="address1" type="text" required autocomplete="address-line1"></div>
+      <div class="field"><label for="address2">Apt / Unit <span class="opt">(optional)</span></label>
+        <input id="address2" name="address2" type="text" autocomplete="address-line2"></div>
+      <div class="field"><label for="city">City</label>
+        <input id="city" name="city" type="text" required autocomplete="address-level2"></div>
+      <div class="row">
+        <div class="field"><label for="state">State / Province</label>
+          <input id="state" name="state" type="text" required autocomplete="address-level1"></div>
+        <div class="field"><label for="zip">ZIP / Postal code</label>
+          <input id="zip" name="zip" type="text" required autocomplete="postal-code"></div>
+      </div>
+      <div class="field"><label for="country">Country</label>
+        <input id="country" name="country" type="text" required autocomplete="country-name" value="United States"></div>
+      <div class="field"><label for="guests">People in your household <span class="opt">(optional)</span></label>
+        <input id="guests" name="guests" type="number" min="1" max="10" inputmode="numeric"></div>
+      <div class="field"><label for="note">Note to the couple <span class="opt">(optional)</span></label>
+        <textarea id="note" name="note"></textarea></div>
+
+      <button class="btn" type="submit">Send</button>
+      <p class="error" role="alert" hidden>Something went wrong. Please try again or email us at <a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a>.</p>
+    </form>
+
+    <div class="thanks" role="status" hidden>
+      <h2 class="gold">Thank you!<span class="vi">Cảm ơn bạn!</span></h2>
+      <p>Watch your mailbox for the invitation. 💌</p>
+      <a class="btn" href="/">See more</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p class="motto">strength · belief · determination</p>
+  <p class="small"><a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a></p>
+  <p class="small">Photos by Yashar's Photos</p>
+</footer>
+<script src="/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RSVP · Trisa &amp; Charles</title>
+<meta name="description" content="RSVP for Trisa and Charles's wedding, June 26, 2027 at Kim Son Restaurant in Houston.">
+<meta property="og:title" content="RSVP · Trisa &amp; Charles">
+<meta property="og:image" content="https://trisaandcharleswedding.com/assets/img/hero.jpg">
+<meta property="og:url" content="https://trisaandcharleswedding.com/rsvp/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <a href="/">Home</a>
+  <a href="/save-the-date/">Save the Date</a>
+  <a href="/rsvp/" aria-current="page">RSVP</a>
+</nav>
+
+<main class="wrap">
+  <img class="print hero-img"
+       src="/assets/img/sofa.jpg"
+       srcset="/assets/img/sofa-800.jpg 600w, /assets/img/sofa.jpg 1200w"
+       sizes="(max-width: 720px) 100vw, 720px"
+       width="1200" height="1600"
+       alt="Charles seated on the floor in front of Trisa on a sofa">
+
+  <section class="card overlap">
+    <h1 class="heading gold">RSVP<span class="vi">Xác nhận tham dự</span></h1> <!-- VI: needs proofreading -->
+    <h2 class="names gold"><span>Trisa &amp; Charles</span></h2>
+    <p class="date">Saturday, June 26, 2027<br>5:00 PM<br>Kim Son Restaurant</p>
+    <p>10603 Bellaire Blvd, Houston, TX 77072</p>
+    <p>Dress Code: Cocktail Attire</p>
+    <p class="small">Kindly reply by May 26, 2027
+      <span class="vi">Vui lòng hồi âm trước ngày 26 tháng 5 năm 2027</span></p> <!-- VI: needs proofreading -->
+  </section>
+
+  <section class="card wine" id="form">
+    <!-- PHASE SWAP (April 2027): remove `hidden` from the form, add `hidden` to this notice. See SPEC.md §7. -->
+    <div class="notice">
+      <h2 class="gold">RSVPs open in April<span class="vi">Mở xác nhận vào tháng 4</span></h2> <!-- VI: needs proofreading -->
+      <p>Watch your mailbox for your invitation, then come back here to reply.</p>
+    </div>
+
+    <div hidden id="rsvp-form-wrap">
+      <h2 class="gold">Will you join us?<span class="vi">Bạn sẽ đến chứ?</span></h2> <!-- VI: needs proofreading -->
+      <form data-form="rsvp">
+        <input type="hidden" name="form" value="rsvp">
+        <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="field"><label for="name">Your name</label>
+          <input id="name" name="name" type="text" required autocomplete="name"></div>
+        <div class="field"><label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email"></div>
+
+        <fieldset class="field"><legend>Will you attend?</legend>
+          <label class="choice"><input type="radio" name="attending" value="Joyfully accepts" required> Joyfully accepts</label>
+          <label class="choice"><input type="radio" name="attending" value="Regretfully declines"> Regretfully declines</label>
+        </fieldset>
+
+        <div class="if-attending" hidden>
+          <div class="field"><label for="party">Number attending (including you)</label>
+            <input id="party" name="party" type="number" min="1" max="10" inputmode="numeric" disabled></div>
+          <div class="field"><label for="guestNames">Names of everyone attending <span class="opt">(optional)</span></label>
+            <textarea id="guestNames" name="guestNames"></textarea></div>
+          <div class="field"><label for="dietary">Dietary restrictions or allergies <span class="opt">(optional)</span></label>
+            <input id="dietary" name="dietary" type="text"></div>
+        </div>
+
+        <div class="field"><label for="note">Note to the couple <span class="opt">(optional)</span></label>
+          <textarea id="note" name="note"></textarea></div>
+
+        <button class="btn" type="submit">Send RSVP</button>
+        <p class="error" role="alert" hidden>Something went wrong. Please try again or email us at <a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a>.</p>
+      </form>
+
+      <div class="thanks" role="status" hidden>
+        <h2 class="gold">Thank you!<span class="vi">Cảm ơn bạn!</span></h2>
+        <p>We've received your RSVP.</p>
+        <a class="btn" href="/">See more</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p class="motto">strength · belief · determination</p>
+  <p class="small"><a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a></p>
+  <p class="small">Photos by Yashar's Photos</p>
+</footer>
+<script src="/script.js"></script>
+</body>
+</html>

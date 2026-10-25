@@ -1,0 +1,135 @@
+:root {
+  --peony: #C4245A;
+  --peony-deep: #A81D4C;
+  --wine: #6B1A35;
+  --blush: #F2C7CD;
+  --ivory: #FBF7F0;
+  --gold: #C9A24C;
+  --gold-deep: #8E6B22;
+  --mauve: #7D5B60;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--peony) url(/assets/flower.svg);
+  color: var(--wine);
+  font: 400 1rem/1.6 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--blush); outline-offset: 2px; }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+/* nav */
+.nav { display: flex; justify-content: center; flex-wrap: wrap; gap: .25rem 1.5rem; padding: 1rem 16px; }
+.nav a { color: var(--ivory); text-decoration: none; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; padding: .25rem 0; border-bottom: 1px solid transparent; }
+.nav a:hover, .nav a[aria-current] { border-bottom-color: var(--gold); }
+
+/* photos, framed like prints */
+.print { border: 8px solid var(--ivory); box-shadow: 0 6px 20px rgba(60, 0, 20, .35); }
+.hero-img { width: 100%; max-height: 80vh; object-fit: cover; object-position: center 30%; }
+
+/* cards: ivory insert / wine RSVP card, scalloped top, thin gold rule */
+.card {
+  --card: var(--ivory);
+  position: relative;
+  background: var(--card);
+  margin: 2.5rem 0;
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+}
+.card.wine { --card: var(--wine); color: var(--ivory); }
+.card::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: -10px; height: 10px;
+  background: radial-gradient(circle at 10px 10px, var(--card) 10px, transparent 10.5px) 0 0 / 20px 10px repeat-x;
+}
+.card::after {
+  content: "";
+  position: absolute; inset: 8px;
+  border: 1px solid var(--gold);
+  opacity: .7;
+  pointer-events: none;
+}
+.overlap { margin-top: -3rem; position: relative; z-index: 1; }
+
+/* type */
+.names, h1, h2 { margin: 0; font-weight: 400; }
+.names {
+  font-family: 'Pinyon Script', 'Great Vibes', cursive;
+  font-size: clamp(2.6rem, 11vw, 4.2rem);
+  line-height: 1.15;
+  margin: .4rem 0;
+}
+.names span { display: block; }
+.names .amp { font-size: .6em; }
+h2, .heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic; font-weight: 700;
+  font-size: 1.8rem; line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.gold { color: var(--gold-deep); }
+.wine .gold { color: var(--gold); }
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gold { background: linear-gradient(#C9A24C, #8E6B22) text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .wine .gold { background-image: linear-gradient(#E3C57A, #C9A24C); }
+}
+.vi { display: block; font: italic 400 .85rem/1.5 'IBM Plex Mono', ui-monospace, monospace; color: var(--mauve); -webkit-text-fill-color: currentColor; }
+.wine .vi { color: var(--blush); }
+.small { font-size: .85rem; letter-spacing: .04em; margin: 1rem 0; }
+.date { font-weight: 500; letter-spacing: .08em; text-transform: uppercase; margin: 1.2rem 0 1.5rem; }
+.date .vi { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.motto { font-family: 'Pinyon Script', cursive; font-size: 1.8rem; }
+
+.rule { border: 0; height: 1px; width: 60%; margin: 1.5rem auto; background: var(--gold); position: relative; overflow: visible; }
+.rule::after { content: "✦"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0 .6rem; background: var(--card, var(--ivory)); color: var(--gold-deep); font-size: .8rem; }
+
+.round { width: 160px; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold); margin: 0 auto 1.5rem; }
+
+/* buttons */
+.btn {
+  display: inline-block; border: 0; cursor: pointer;
+  padding: .85rem 1.8rem; border-radius: 999px;
+  background: linear-gradient(#E3C57A, #C9A24C);
+  color: var(--wine);
+  font: 500 1rem 'IBM Plex Mono', monospace;
+  letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+}
+.btn:hover { filter: brightness(1.07); }
+.btn:disabled { opacity: .6; cursor: wait; }
+
+/* gallery */
+.gallery-title { color: var(--ivory); text-align: center; }
+.gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2.5rem; }
+.gallery img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+
+/* forms */
+form { text-align: left; }
+.field { margin: 0 0 1rem; padding: 0; border: 0; }
+.field label, .field legend { display: block; font-size: .9rem; font-weight: 500; margin-bottom: .25rem; padding: 0; }
+.field .opt { font-weight: 400; opacity: .8; }
+input[type=text], input[type=email], input[type=tel], input[type=number], textarea {
+  width: 100%; padding: .7rem; border: 1px solid var(--gold); border-radius: 4px;
+  background: var(--ivory); color: var(--wine); font: inherit; font-size: 1rem;
+}
+textarea { min-height: 5rem; resize: vertical; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.choice { display: flex; align-items: center; gap: .6rem; font-weight: 400 !important; padding: .35rem 0; }
+.choice input { width: 1.2rem; height: 1.2rem; accent-color: var(--gold); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.error { background: var(--blush); color: var(--wine); padding: .75rem 1rem; border-radius: 4px; margin: 1rem 0 0; }
+form .btn { margin-top: .5rem; width: 100%; }
+.thanks { text-align: center; }
+
+/* footer */
+.footer { background: var(--blush); color: var(--wine); text-align: center; padding: 2rem 16px 2.5rem; }
+.footer p { margin: .4rem 0; }
+.footer .motto { color: var(--gold-deep); }
+.footer .small { font-size: .8rem; }
