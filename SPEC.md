@@ -250,6 +250,15 @@ A password-protected table of the `addresses` rows where you can edit any cell
 - **Protection is in the database**, not the page: row-level security gives the
   `authenticated` role select/update/delete on `addresses` (see `supabase/schema.sql`).
   Without a login the same URL shows only the sign-in form and the API returns no rows.
+- **Password reset:** "Forgot password?" on the sign-in form emails a reset link
+  (Supabase Auth) that opens `/admin/` on a set-new-password form. One-time setup:
+  in Supabase → Authentication → URL Configuration, add
+  `https://trisaandcharleswedding.com/admin/` (and `http://localhost:8000/admin/`
+  for testing) to **Redirect URLs**, and set **Site URL** to
+  `https://trisaandcharleswedding.com`. The built-in Supabase mailer is rate
+  limited (a few emails an hour), which is plenty for two admins. You can always
+  reset a password by hand in Authentication → Users.
+- The page links back to `/save-the-date/`.
 - **Public signups must stay off** (Authentication → Sign In / Providers → turn off
   "Allow new users to sign up"). If they are on, any visitor could register and read
   every address.

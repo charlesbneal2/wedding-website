@@ -13,6 +13,7 @@
   input, button { font: inherit; padding: .45rem .6rem; border: 1px solid #b9b2a6; border-radius: 4px; background: #fff; }
   button { cursor: pointer; background: #57223b; border-color: #57223b; color: #fff; }
   button.secondary { background: #fff; color: #57223b; }
+  a.btn { display: inline-block; padding: .45rem .6rem; border: 1px solid #57223b; border-radius: 4px; background: #fff; color: #57223b; text-decoration: none; text-align: center; }
   button.danger { background: #fff; color: #a3261d; border-color: #a3261d; }
   button:disabled { opacity: .5; cursor: default; }
   .bar { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -39,13 +40,24 @@
   <input name="email" type="email" placeholder="Email" autocomplete="username" required>
   <input name="password" type="password" placeholder="Password" autocomplete="current-password" required>
   <button type="submit">Sign in</button>
-  <p class="msg err" id="login-msg" role="alert"></p>
+  <button type="button" class="secondary" id="forgot">Forgot password?</button>
+  <a class="btn" href="/save-the-date/">Back to save the date</a>
+  <p class="msg" id="login-msg" role="alert"></p>
+</form>
+
+<form class="login" id="setpw" hidden>
+  <h1>Set a new password</h1>
+  <input name="password" type="password" placeholder="New password (8+ characters)" autocomplete="new-password" minlength="8" required>
+  <input name="confirm" type="password" placeholder="Confirm new password" autocomplete="new-password" minlength="8" required>
+  <button type="submit">Save password</button>
+  <p class="msg" id="setpw-msg" role="alert"></p>
 </form>
 
 <main id="app" hidden>
   <div class="bar">
     <h1 style="margin:0">Addresses <span id="count"></span></h1>
     <input class="grow" id="filter" type="search" placeholder="Filter by any text" aria-label="Filter rows">
+    <a class="btn" href="/save-the-date/">Save the date page</a>
     <button class="secondary" id="refresh" type="button">Refresh</button>
     <button class="secondary" id="logout" type="button">Sign out</button>
   </div>

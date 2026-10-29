@@ -7,8 +7,10 @@ const FIELDS = ['name', 'email', 'address1', 'address2', 'city', 'state', 'zip',
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = id => document.getElementById(id);
-const loginForm = $('login'), app = $('app'), rows = $('rows'), msg = $('msg');
+const loginForm = $('login'), setpwForm = $('setpw'), app = $('app'), rows = $('rows'), msg = $('msg');
 let data = [];
+// A reset-email link lands here with type=recovery in the URL hash.
+let recovering = location.hash.includes('type=recovery');
 
 function say(text, isError = false) {
   msg.textContent = text;
@@ -17,7 +19,8 @@ function say(text, isError = false) {
 
 function show(signedIn) {
   loginForm.hidden = signedIn;
-  app.hidden = !signedIn;
+  setpwForm.hidden = !(signedIn && recovering);
+  app.hidden = !signedIn || recovering;
 }
 
 async function load() {
@@ -93,8 +96,9 @@ function rowFor(record) {
 
 loginForm.addEventListener('submit', async e => {
   e.preventDefault();
-  const button = loginForm.querySelector('button');
+  const button = loginForm.querySelector('button[type=submit]');
   button.disabled = true;
+  $('login-msg').className = 'msg err';
   $('login-msg').textContent = '';
   const form = new FormData(loginForm);
   const { error } = await db.auth.signInWithPassword({ email: form.get('email'), password: form.get('password') });
@@ -103,13 +107,41 @@ loginForm.addEventListener('submit', async e => {
   loginForm.reset();
 });
 
+$('forgot').addEventListener('click', async () => {
+  const out = $('login-msg');
+  const email = loginForm.elements.email.value.trim();
+  out.className = 'msg err';
+  if (!email) return (out.textContent = 'Enter your email above first.');
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/admin/` });
+  if (error) return (out.textContent = `Could not send the email: ${error.message}`);
+  out.className = 'msg';
+  out.textContent = 'If that email has an admin account, a reset link is on its way.';
+});
+
+setpwForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = new FormData(setpwForm);
+  const out = $('setpw-msg');
+  out.className = 'msg err';
+  if (form.get('password') !== form.get('confirm')) return (out.textContent = 'Passwords do not match.');
+  const { error } = await db.auth.updateUser({ password: form.get('password') });
+  if (error) return (out.textContent = error.message);
+  setpwForm.reset();
+  recovering = false;
+  history.replaceState(null, '', location.pathname);
+  show(true);
+  load();
+  say('Password updated.');
+});
+
 $('logout').addEventListener('click', () => db.auth.signOut());
 $('refresh').addEventListener('click', load);
 $('filter').addEventListener('input', render);
 
-db.auth.onAuthStateChange((_event, session) => {
+db.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') recovering = true;
   // Token refreshes fire this too; only (re)load when moving from signed out to in.
-  const justSignedIn = Boolean(session) && app.hidden;
+  const justSignedIn = Boolean(session) && app.hidden && !recovering;
   show(Boolean(session));
   if (justSignedIn) load();
   else if (!session) { data = []; rows.replaceChildren(); }
