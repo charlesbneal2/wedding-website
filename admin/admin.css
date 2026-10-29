@@ -85,7 +85,23 @@ td input.changed { background: #fbf1cf; border-color: #d9b94c; }
 td.actions { display: flex; gap: .4rem; padding-right: .75rem; }
 tbody tr:hover { background: rgb(255 255 255 / 45%); }
 
-@media (max-width: 600px) {
+/* Phones: each row becomes a card with labeled fields instead of a wide table. */
+@media (max-width: 700px) {
   body { padding: 1.5rem 1rem 3rem; }
   .card { padding: 2rem 1.25rem; }
+  .bar h2 { flex-basis: 100%; }
+  .bar input { flex-basis: 100%; width: 100%; }
+  .bar .btn { flex: 1 1 auto; }
+  .scroll { overflow: visible; background: none; border: 0; }
+  table, tbody, tr, td { display: block; }
+  thead { display: none; }
+  tr { margin-bottom: 1rem; padding: .75rem; background: var(--form-paper); border: 1px solid var(--line); }
+  tbody tr:hover { background: var(--form-paper); }
+  td { padding: 0; border: 0; white-space: normal; }
+  td.date { margin-bottom: .5rem; padding: 0; }
+  td[data-label] { margin-bottom: .6rem; }
+  td[data-label]::before { content: attr(data-label); display: block; margin-bottom: .2rem; font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  td input { min-width: 0; padding: .6rem .65rem; border-color: var(--line); background: rgb(255 255 255 / 68%); font-size: 16px; } /* 16px stops iOS zooming on focus */
+  td.actions { display: flex; gap: .6rem; padding: .25rem 0 0; }
+  td.actions .btn { flex: 1; padding: .6rem .7rem; }
 }

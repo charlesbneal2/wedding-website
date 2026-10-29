@@ -4,6 +4,7 @@
 const SUPABASE_URL = 'https://bbzhzmtewslqanvovhcn.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGLRYHaUHs3eHIsOBHZR9A_Eve850Zz';
 const FIELDS = ['name', 'email', 'address1', 'address2', 'city', 'state', 'zip', 'country'];
+const LABELS = { name: 'Name', email: 'Email', address1: 'Street', address2: 'Apt / Unit', city: 'City', state: 'State', zip: 'ZIP', country: 'Country' };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = id => document.getElementById(id);
@@ -52,7 +53,9 @@ function rowFor(record) {
     input.setAttribute('aria-label', f);
     input.addEventListener('input', () => input.classList.toggle('changed', input.value !== record[f]));
     inputs[f] = input;
-    tr.insertCell().append(input);
+    const cell = tr.insertCell();
+    cell.dataset.label = LABELS[f];
+    cell.append(input);
   }
 
   const actions = tr.insertCell();
