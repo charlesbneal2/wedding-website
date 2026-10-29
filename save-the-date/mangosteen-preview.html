@@ -15,6 +15,7 @@
 .mangosteen-preview .entrance-address { isolation: isolate; }
 .mangosteen-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .mangosteen-field img { position: absolute; top: 0; left: 0; image-rendering: pixelated; will-change: transform; }
+.mangosteen-field img[hidden] { display: none; }
 .mangosteen-preview .entrance-form { position: relative; z-index: 1; }
 .mangosteen-preview .entrance-form input { background: var(--form-paper); }
 .mangosteen-preview label,
@@ -65,40 +66,49 @@
   const toggle = document.querySelector('.preview-toggle');
   const status = document.querySelector('#preview-status');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sprites = Array.from({ length: 24 }, () => {
+  const rowSize = 8;
+  const rowCount = 3;
+  const fallSpeed = 80;
+  const sprites = Array.from({ length: rowSize * rowCount }, (_, index) => {
     const image = document.createElement('img');
-    image.src = '/assets/favicon.svg';
+    const pink = Math.floor((index + 1) * .3) > Math.floor(index * .3);
+    image.src = pink ? '/assets/mangosteen-pink.svg' : '/assets/favicon.svg';
     image.alt = '';
     field.append(image);
-    return { image, originX: 0, y: 0, phase: 0, speed: 0 };
+    return { image, row: Math.floor(index / rowSize), originX: 0, phase: 0 };
   });
   let width = 0;
   let height = 0;
   let size = 0;
   let frame = 0;
   let previous = 0;
+  let elapsed = 0;
   let paused = false;
+  let complete = false;
 
   const paint = () => {
+    const progress = elapsed * fallSpeed / (height + size);
+    const row = reducedMotion.matches ? 0 : Math.floor(progress);
+    const y = reducedMotion.matches ? (height - size) / 2 : -size + (progress % 1) * (height + size);
     for (const sprite of sprites) {
-      const x = sprite.originX + Math.sin(sprite.phase) * Math.min(32, width * .06);
-      sprite.image.style.transform = `translate3d(${Math.round(Math.max(0, Math.min(width - size, x)))}px, ${Math.round(sprite.y)}px, 0)`;
+      sprite.image.hidden = complete || sprite.row !== row;
+      const x = sprite.originX + Math.sin(sprite.phase + elapsed * .7) * Math.min(32, width * .06);
+      sprite.image.style.transform = `translate3d(${Math.round(Math.max(0, Math.min(width - size, x)))}px, ${Math.round(y)}px, 0)`;
     }
   };
 
   function reset() {
+    const progress = height ? elapsed * fallSpeed / (height + size) : 0;
     width = stage.clientWidth;
     height = stage.clientHeight;
     size = (width <= 600 ? 32 : 48) * 1.3 * 1.5;
+    elapsed = progress * (height + size) / fallSpeed;
     sprites.forEach((sprite, index) => {
       sprite.image.style.width = `${size}px`;
       sprite.image.style.height = `${size}px`;
-      sprite.originX = (width - size) * (index + .5) / sprites.length;
-      sprite.y = reducedMotion.matches
-        ? (height - size) * (index + 1) / (sprites.length + 1)
-        : (height + size) * ((index * 7) % sprites.length + .5) / sprites.length - size;
-      sprite.phase = index * Math.PI * 2 / sprites.length;
-      sprite.speed = 45 + 35 * index / (sprites.length - 1);
+      const column = index % rowSize;
+      sprite.originX = (width - size) * (column + .5) / rowSize;
+      sprite.phase = column * Math.PI * 2 / rowSize;
     });
     paint();
   }
@@ -106,14 +116,13 @@
   function animate(time) {
     const dt = previous ? Math.min((time - previous) / 1000, .035) : 0;
     previous = time;
-    for (const sprite of sprites) {
-      sprite.phase += dt * .7;
-      sprite.y += sprite.speed * dt;
-      if (sprite.y > height) {
-        sprite.y = -size;
-      }
-    }
+    elapsed += dt;
+    complete = elapsed * fallSpeed >= rowCount * (height + size);
     paint();
+    if (complete) {
+      syncMotion();
+      return;
+    }
     frame = window.requestAnimationFrame(animate);
   }
 
@@ -121,12 +130,13 @@
     window.cancelAnimationFrame(frame);
     previous = 0;
     toggle.hidden = reducedMotion.matches;
-    toggle.textContent = paused ? 'Resume animation' : 'Pause animation';
+    toggle.disabled = complete;
+    toggle.textContent = complete ? 'Animation complete' : paused ? 'Resume animation' : 'Pause animation';
     toggle.setAttribute('aria-pressed', String(paused));
     status.textContent = reducedMotion.matches
       ? 'Animation preview only. Reduced motion is enabled; artwork is static. No addresses are sent or stored.'
       : 'Animation preview only. No addresses are sent or stored.';
-    if (!paused && !reducedMotion.matches && !document.hidden) {
+    if (!complete && !paused && !reducedMotion.matches && !document.hidden) {
       frame = window.requestAnimationFrame(animate);
     }
   }

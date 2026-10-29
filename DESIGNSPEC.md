@@ -98,6 +98,7 @@ Do not make readable content depend on an external font loading successfully.
 | Form paper | `#fffaf0` | Solid cream mailing-address section |
 | Berry | `#80505d` | Form headings, labels, and entered text |
 | Purple | `#57223b` | Send-address button default background and border |
+| Pink-magenta | `#b54d66` | Accent fruit in the separate mangosteen preview |
 | Olive ink | `#3d4936` | Holding-page copy and submit-button hover |
 | White | `#ffffff` | Copy over the first Save the Date photograph |
 
@@ -117,15 +118,18 @@ footer lace, lotus, or separate credits block.
 
 ### Separate mangosteen motion preview
 
-The explicitly requested standalone HTML preview reuses `assets\favicon.svg`
-as 24 decorative pixel mangosteens (300% more than the original six),
-50% larger than the previous snowfall preview (62.4px on mobile, 93.6px on
-desktop). They drift gently downward like falling
-snow, sway side to side, and reappear above the mailing area after passing
-its bottom. Stagger their positions and falling speeds for a continuous flow;
-do not use gravity, bouncing, or collisions.
+The explicitly requested standalone HTML preview uses 24 decorative pixel
+mangosteens, shown as one row of eight at a time for three rows total.
+Seven of the 24 (approximately 30%) use the palette pink-magenta `#b54d66`
+via `assets\mangosteen-pink.svg`; the others reuse `assets\favicon.svg`.
+Keep the current enlarged size (62.4px on mobile, 93.6px on desktop).
+Each row drifts gently downward with side-to-side sway. Only after a row exits
+the bottom does the next enter from above. After the third row, all fruit
+disappears and the animation stops; resizing or changing tab visibility must
+not restart it. Do not use gravity, bouncing, collisions, or an endless loop.
 Artwork sits behind the form and does not intercept pointer events or obscure
-input text. Pause/Resume is available; reduced motion uses static artwork.
+input text. Pause/Resume is available until completion; reduced motion uses
+one static row without automatic falling.
 The preview loads neither the submission handler nor Places autocomplete,
 keeps its send button disabled, and prevents form submission.
 This is a new optional experiment, not approval to add fruit to the main page.
