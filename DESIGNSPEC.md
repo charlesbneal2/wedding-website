@@ -29,7 +29,7 @@ experiments or add navigation, decoration, or motion without a clear purpose.
 |---|---|
 | `/` | One original armchair photograph and the work-in-progress message below |
 | `/save-the-date/` | Selected automatic curtain entrance A, three stacked photographs, and the cream mailing-address form |
-| `/save-the-date/#address` | The same page, bypassing the entrance and going directly to the form |
+| `/save-the-date/#address` | Opens directly at the form, then clears the fragment so refresh restarts the entrance |
 | `/rsvp/` | Its existing sofa photograph and only the message "RSVP opens soon" |
 | `/save-the-date/mangosteen-preview.html` | Separate animation experiment; not part of the selected guest experience and never submits addresses |
 
@@ -74,18 +74,20 @@ A complete RSVP interface is future work, not part of this approved release.
 | Home and RSVP messages | Libre Baskerville | 400, 16px, centered; both pages must match |
 | Save the Date curtain headline | Marcellus | 400, uppercase, tight `-.055em` tracking |
 | Couple's names on the first photograph | Pinyon Script | 400; keep the script character |
-| Date on the first photograph | Marcellus | 400, white left-aligned stack with a one-time left-to-right fade; one word/number per line, remaining visible afterward |
+| Date on the first photograph | Marcellus | 400, white and top-centered; Saturday above the date on mobile, one line on desktop; quick slide-in matching SAVE THE DATE |
 | Curtain introduction, Houston location, and photo CTA | Libre Baskerville | 400; supporting copy, not another decorative face |
 | Mailing Address heading and form introduction | Libre Baskerville | 700; uppercase presentation |
 | Form labels and entered input text | Libre Baskerville | 700; consistent with the heading and easier to read |
 | Submit button and status/error copy | Libre Baskerville | 400; button uses uppercase presentation |
+| Tofu and Miso greeting bubbles | Press Start 2P | 400; small pixel-game lettering |
 
 The form heading must not revert to Marcellus or a script font while inputs
 remain in Libre Baskerville. That mismatch was explicitly rejected.
 
 Fonts are loaded from Google Fonts by each page as needed. Home and RSVP load
 Libre Baskerville 400; Save the Date loads Libre Baskerville 400/700,
-Marcellus, and Pinyon Script. Preserve usable fallbacks: Georgia/serif for body
+Marcellus, Pinyon Script, and Press Start 2P for cat greetings.
+Preserve usable fallbacks: Georgia/serif for body
 text, Times New Roman/serif for Marcellus, and Brush Script MT/cursive for names.
 Do not make readable content depend on an external font loading successfully.
 
@@ -98,7 +100,7 @@ Do not make readable content depend on an external font loading successfully.
 | Form paper | `#fffaf0` | Solid cream mailing-address section |
 | Berry | `#80505d` | Form headings, labels, and entered text |
 | Purple | `#57223b` | Send-address button default background and border |
-| Pink-magenta | `#b54d66` | Accent fruit in the separate mangosteen preview |
+| Pink-magenta | `#b54d66` | Accent fruit behind the mailing form and in its preview |
 | Olive ink | `#3d4936` | Holding-page copy and submit-button hover |
 | White | `#ffffff` | Copy over the first Save the Date photograph |
 
@@ -116,9 +118,33 @@ Use the existing subtle paper grain, not new oversized artwork.
 Keep the original pixel-art mangosteen favicon. No active page has a footer,
 footer lace, lotus, or separate credits block.
 
-### Separate mangosteen motion preview
+### Mailing Address cats
 
-The explicitly requested standalone HTML preview uses 24 decorative pixel
+The approved gray-and-white cat sits to the left of the Mailing Address heading;
+the orange-and-white cat sits to the right, mirrored for a balanced pair.
+Use `assets\img\cat-gray-idle.png` and `assets\img\cat-orange-idle.png`, preserving
+the approved spots, white bellies, and the orange cat's white forehead.
+Tofu's gray markings are confined to the head and tail; the body and paws
+are white. Keep the original gray sheet and its white-paw variant separate.
+Each transparent sheet contains ten 32px-square idle frames. Animate the
+head bob and tail movement with a synchronized 1.4-second stepped loop so their
+paws stay on the same plane. Lift both sprite windows slightly to center the
+visible cats on the heading. Keep pixel edges crisp at 128px on desktop and 64px
+on screens up to 600px; scale the mobile heading from 16px to its existing 22.4px
+without changing its font or weight. The heading stays centered between the
+cats, with the introduction below it and no artwork over the fields.
+These cats are named, keyboard-accessible buttons with at least 64px touch
+targets. Tapping the gray cat shows "tofu ~"; tapping the orange cat shows
+"miso ~". Use Press Start 2P for the small pixel-game speech bubbles, not for
+the form or date. Keep the orange greeting upright despite the mirrored sprite.
+Show one greeting at a time and keep it visible until a second tap, another
+cat's greeting, or Escape dismisses it. Clicking cats must never submit the form.
+Reduced motion shows their static first frames without disabling greetings.
+Keep the original source sheets unchanged.
+
+### Falling mangosteens
+
+The mailing-address section and its standalone HTML preview share 24 decorative pixel
 mangosteens, randomly scattered rather than arranged in rows.
 Seven of the 24 (approximately 30%) use the palette pink-magenta `#b54d66`
 via `assets\mangosteen-pink.svg`; the others reuse `assets\favicon.svg`.
@@ -132,11 +158,18 @@ Each fruit falls once, then disappears; stop when
 all 24 have finished. Resizing or changing tab visibility must not restart
 completed fruit. Do not use gravity, bouncing, collisions, or an endless loop.
 Artwork sits behind the form and does not intercept pointer events or obscure
-input text. Pause/Resume is available until completion; reduced motion uses
+input text. The preview retains Pause/Resume until completion; reduced motion uses
 scattered static artwork without automatic falling.
-The preview loads neither the submission handler nor Places autocomplete,
+The main site's animation starts when the address section enters view and
+pauses while it is offscreen. Keep it behind the real form, not over the
+photographs. Inputs and text have opaque paper backing for readability.
+The main form has no animation-control button; the finite effect stops
+automatically. Cat greetings never submit the form. Preserve the real address
+submission handler and Places autocomplete.
+
+The separate preview loads neither the submission handler nor Places autocomplete,
 keeps its send button disabled, and prevents form submission.
-This is a new optional experiment, not approval to add fruit to the main page.
+It uses the same animation code, but remains an inert animation study.
 
 ## 5. Save the Date: content and photographs
 
@@ -151,24 +184,32 @@ or a query-selected study.
 
 The opening introduction reads "Together with our families," followed by
 "we invite you to", then the image-filled SAVE THE DATE headline.
-The first photograph contains "Trisa & Charles", "Saturday, June 26, 2027",
+The first photograph contains "Trisa Vo & Charles Neal", "Saturday, June 26, 2027",
 "Houston, Texas", and "Share your mailing address".
 
 The date stays visible on the first photograph after the original SAVE THE DATE
-entrance. Set Saturday, / June / 26, / 2027 on four left-aligned lines at the
-photo copy's responsive left margin. Keep the existing Marcellus font, capped by
-the available width and height so complete words remain readable rather than
-cropped. If necessary on a short screen, let the hero grow instead of overlapping
-the names or address CTA. Keep the date in normal hero flow: it scrolls away
-with the other photo copy, not over the form. There is no date marquee, duplicate
-visual copy, or Pause/Play control; one semantic time element carries the date.
-Fade each line in from left to right once using a soft gradient mask, starting
-after the curtain opens. This is not a handwriting-font change or a hard-edged
-wipe. Keep every line visible after it finishes.
+entrance. On mobile, show two top-centered lines below the names: "Saturday,"
+then "June 26, 2027". Keep Marcellus and size the second line nearly edge to edge
+on portrait phones, using the full photo width rather than the copy's narrower
+padded width. On desktop, keep the full date together on one line. Cap the font
+size by available height so the date stays above Charles's head without
+overlapping the names or address CTA. On short landscape screens, let the
+hero grow to preserve that clearance. Keep the date in normal
+hero flow: it scrolls away with the other photo copy, not over the form.
+There is no date marquee, duplicate visual copy, or Pause/Play control;
+one semantic time element carries the date. Use the same `reveal-title`
+animation as the SAVE THE DATE headline: a quick 32px slide from the left with
+opacity, lasting 0.8 seconds and using `cubic-bezier(.2, .65, .25, 1)`.
+Start after the curtain opens and keep the date visible afterward.
 
 **The location and address CTA belong on the first photograph only.**
 Moving the CTA to the third photograph was tried and explicitly undone.
 The direct link must remain keyboard accessible.
+Clear `#address` with `history.replaceState` only after reaching the form,
+preserving the pathname, query parameters, and history state. Incoming deep
+links still bypass the entrance on their first visit. A refresh uses the clean
+URL and restarts the curtain at the top; disable automatic scroll restoration
+so the browser does not restore the form's previous scroll position.
 
 ### Desktop and tablet widths above 600px
 

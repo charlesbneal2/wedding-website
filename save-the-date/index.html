@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Save the Date · Trisa &amp; Charles</title>
-<meta name="description" content="Trisa and Charles are getting married June 26, 2027 in Houston, TX. Share your mailing address so we can send your wedding invitation.">
-<meta property="og:title" content="Save the Date · Trisa &amp; Charles">
+<title>Save the Date · Trisa Vo &amp; Charles Neal</title>
+<meta name="description" content="Trisa Vo and Charles Neal are getting married June 26, 2027 in Houston, TX. Share your mailing address so we can send your wedding invitation.">
+<meta property="og:title" content="Save the Date · Trisa Vo &amp; Charles Neal">
 <meta property="og:description" content="June 26, 2027 · Houston, TX. Share your mailing address for your wedding invitation.">
 <meta property="og:image" content="https://trisaandcharleswedding.com/assets/img/save-the-date-dance.jpg">
 <meta property="og:url" content="https://trisaandcharleswedding.com/save-the-date/">
@@ -17,11 +17,12 @@
 <link rel="icon" href="/assets/favicon.svg?v=mangosteen" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Marcellus&amp;family=Pinyon+Script&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Marcellus&amp;family=Pinyon+Script&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <link rel="stylesheet" href="/save-the-date/save-the-date.css">
 <script src="/script.js" defer></script>
 <script src="/save-the-date/save-the-date.js" defer></script>
+<script src="/save-the-date/mangosteen.js" defer></script>
 </head>
 <body class="entrance-page">
 <a class="skip-link" href="#address">Skip to address form</a>
@@ -34,7 +35,7 @@
   </div>
 </div>
 <main id="main">
-  <h1 class="visually-hidden">Save the Date · Trisa &amp; Charles</h1>
+  <h1 class="visually-hidden">Save the Date · Trisa Vo &amp; Charles Neal</h1>
   <section class="entrance-hero" aria-label="Wedding announcement">
     <div class="entrance-photo">
       <img class="entrance-image"
@@ -43,12 +44,10 @@
            sizes="100vw" width="1800" height="2400" fetchpriority="high"
            alt="Charles twirling Trisa beneath an arched doorway">
       <div class="entrance-photo-copy">
-        <p class="entrance-names">Trisa &amp; Charles</p>
+        <p class="entrance-names">Trisa Vo &amp; Charles Neal</p>
         <time class="entrance-date" datetime="2027-06-26">
           <span>Saturday,</span>
-          <span>June</span>
-          <span>26,</span>
-          <span>2027</span>
+          <span>June 26, 2027</span>
         </time>
         <div class="entrance-photo-bottom">
           <p class="entrance-city">Houston, Texas</p>
@@ -77,10 +76,19 @@
     <p class="entrance-gallery-error" role="alert" hidden>The photograph could not load. Please refresh to try again.</p>
   </section>
 
-  <section class="entrance-address" id="address" aria-labelledby="address-title" tabindex="-1">
+  <section class="entrance-address" id="address" aria-labelledby="address-title" tabindex="-1" data-mangosteens>
+    <div class="mangosteen-field" aria-hidden="true"></div>
     <div class="entrance-form">
         <form data-form="address" aria-labelledby="address-title">
-          <h2 id="address-title">Mailing Address</h2>
+          <div class="address-heading">
+            <button class="address-cat address-cat-gray" type="button" aria-label="Tofu, the gray cat" aria-expanded="false" aria-controls="tofu-greeting" disabled>
+              <span class="cat-speech" id="tofu-greeting" role="status" hidden>tofu ~</span>
+            </button>
+            <h2 id="address-title">Mailing Address</h2>
+            <button class="address-cat address-cat-orange" type="button" aria-label="Miso, the orange cat" aria-expanded="false" aria-controls="miso-greeting" disabled>
+              <span class="cat-speech" id="miso-greeting" role="status" hidden>miso ~</span>
+            </button>
+          </div>
           <p class="entrance-form-intro">Formal invitation to follow</p>
           <input type="hidden" name="form" value="address">
           <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
