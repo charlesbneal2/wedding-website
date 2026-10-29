@@ -4,99 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RSVP · Trisa &amp; Charles</title>
-<meta name="description" content="RSVP for Trisa and Charles's wedding, June 26, 2027 at Kim Son Restaurant in Houston.">
+<meta name="description" content="RSVP opens soon">
 <meta property="og:title" content="RSVP · Trisa &amp; Charles">
-<meta property="og:image" content="https://trisaandcharleswedding.com/assets/img/hero.jpg">
+<meta property="og:description" content="RSVP opens soon">
+<meta property="og:image" content="https://trisaandcharleswedding.com/assets/img/sofa.jpg">
 <meta property="og:url" content="https://trisaandcharleswedding.com/rsvp/">
 <link rel="icon" href="/assets/favicon.svg?v=mangosteen" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Pinyon+Script&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <nav class="nav" aria-label="Main">
-    <a href="/">Home</a>
-    <a href="/save-the-date/">Save the Date</a>
-    <a href="/rsvp/" aria-current="page">RSVP</a>
-  </nav>
-  <a class="brand" href="/">Trisa <em>&amp;</em> Charles</a>
-  <span class="header-date">HOUSTON, TX &middot; 06.26.27</span>
-</header>
-
-<main class="wrap" id="main">
-  <img class="print hero-img"
+<body class="placeholder-page">
+<main class="placeholder-content">
+  <img class="placeholder-photo"
        src="/assets/img/sofa.jpg"
        srcset="/assets/img/sofa-800.jpg 600w, /assets/img/sofa.jpg 1200w"
-       sizes="(max-width: 720px) 100vw, 720px"
-       width="1200" height="1600"
+       sizes="(max-width: 528px) calc(100vw - 48px), 480px"
+       width="1200" height="1600" fetchpriority="high"
        alt="Charles seated on the floor in front of Trisa on a sofa">
-
-  <section class="card overlap">
-    <h1 class="heading accent">RSVP</h1>
-    <h2 class="names accent"><span>Trisa &amp; Charles</span></h2>
-    <p class="date">Saturday, June 26, 2027<br>5:00 PM<br>Kim Son Restaurant</p>
-    <p>10603 Bellaire Blvd, Houston, TX 77072</p>
-    <p>Dress Code: Cocktail Attire</p>
-    <p class="small">Kindly reply by May 26, 2027</p>
-  </section>
-
-  <section class="card card-dark" id="form">
-    <!-- PHASE SWAP (April 2027): remove `hidden` from the form, add `hidden` to this notice. See SPEC.md §7. -->
-    <div class="notice">
-      <h2 class="accent">RSVPs open in April</h2>
-      <p>Watch your mailbox for your invitation, then come back here to reply.</p>
-    </div>
-
-    <div hidden id="rsvp-form-wrap">
-      <h2 class="accent">Will you join us?</h2>
-      <form data-form="rsvp">
-        <input type="hidden" name="form" value="rsvp">
-        <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-
-        <div class="field"><label for="name">Your name</label>
-          <input id="name" name="name" type="text" required autocomplete="name"></div>
-        <div class="field"><label for="email">Email</label>
-          <input id="email" name="email" type="email" required autocomplete="email"></div>
-
-        <fieldset class="field"><legend>Will you attend?</legend>
-          <label class="choice"><input type="radio" name="attending" value="Joyfully accepts" required> Joyfully accepts</label>
-          <label class="choice"><input type="radio" name="attending" value="Regretfully declines"> Regretfully declines</label>
-        </fieldset>
-
-        <div class="if-attending" hidden>
-          <div class="field"><label for="party">Number attending (including you)</label>
-            <input id="party" name="party" type="number" min="1" max="10" inputmode="numeric" disabled></div>
-          <div class="field"><label for="guestNames">Names of everyone attending <span class="opt">(optional)</span></label>
-            <textarea id="guestNames" name="guestNames"></textarea></div>
-          <div class="field"><label for="dietary">Dietary restrictions or allergies <span class="opt">(optional)</span></label>
-            <input id="dietary" name="dietary" type="text"></div>
-        </div>
-
-        <div class="field"><label for="note">Note to the couple <span class="opt">(optional)</span></label>
-          <textarea id="note" name="note"></textarea></div>
-
-        <button class="btn" type="submit">Send RSVP</button>
-        <p class="error" role="alert" hidden>Something went wrong. Please try again or email us at <a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a>.</p>
-      </form>
-
-      <div class="thanks" role="status" hidden>
-        <h2 class="accent">Thank you!</h2>
-        <p>We've received your RSVP.</p>
-        <a class="btn" href="/">See more</a>
-      </div>
-    </div>
-  </section>
+  <p>RSVP opens soon</p>
 </main>
-
-<footer class="footer">
-  <img class="lotus" src="/assets/lotus.svg" width="100" height="64" alt="">
-  <p class="small"><a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a></p>
-  <p class="small">Photos by Yashar's Photos</p>
-  <p class="small">Lace artwork by <a href="https://www.freepik.com/" rel="noopener">Freepik</a></p>
-</footer>
-<script src="/script.js"></script>
 </body>
 </html>

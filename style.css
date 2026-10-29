@@ -39,6 +39,26 @@ body, .day-section, .gallery-section, .card, .footer {
 }
 .card:not(.card-dark)::before { --frame-width: 24px; }
 img { max-width: 100%; height: auto; display: block; }
+.placeholder-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(24px, 4vw, 48px);
+  background-color: var(--gallery-surface);
+}
+.placeholder-content {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 480px);
+  text-align: center;
+}
+.placeholder-photo {
+  width: 100%;
+  border: 6px solid var(--paper);
+  border-radius: 18px;
+}
+.placeholder-content p { margin: 0; font-size: 1rem; }
 a { color: inherit; text-underline-offset: .25em; }
 button, input, textarea { font: inherit; }
 :focus-visible { outline: 3px solid var(--rose); outline-offset: 5px; }

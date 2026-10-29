@@ -56,6 +56,7 @@ document.querySelectorAll('form[data-form]').forEach(form => {
       error.hidden = false;
       return;
     }
+    if (btn.disabled) return;
     const label = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Sending…';
@@ -64,9 +65,13 @@ document.querySelectorAll('form[data-form]').forEach(form => {
       const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(form) });
       if (!res.ok) throw new Error(`Submission failed (${res.status})`);
       if ((await res.json()).ok !== true) throw new Error('Submission was not saved');
-      form.hidden = true;
       thanks.hidden = false;
-      thanks.scrollIntoView({ block: 'center' });
+      if (form.dataset.form === 'address') {
+        btn.textContent = 'Sent!';
+      } else {
+        form.hidden = true;
+        thanks.scrollIntoView({ block: 'center' });
+      }
     } catch (failure) {
       console.error('Form submission failed:', failure);
       error.hidden = false; // form stays filled in
