@@ -118,8 +118,9 @@ footer lace, lotus, or separate credits block.
 ### Separate mangosteen motion preview
 
 The explicitly requested standalone HTML preview reuses `assets\favicon.svg`
-as six decorative pixel mangosteens, 30% larger than the original preview
-(41.6px on mobile, 62.4px on desktop). They drift gently downward like falling
+as 24 decorative pixel mangosteens (300% more than the original six),
+50% larger than the previous snowfall preview (62.4px on mobile, 93.6px on
+desktop). They drift gently downward like falling
 snow, sway side to side, and reappear above the mailing area after passing
 its bottom. Stagger their positions and falling speeds for a continuous flow;
 do not use gravity, bouncing, or collisions.

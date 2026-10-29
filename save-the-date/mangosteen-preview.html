@@ -65,7 +65,7 @@
   const toggle = document.querySelector('.preview-toggle');
   const status = document.querySelector('#preview-status');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sprites = Array.from({ length: 6 }, () => {
+  const sprites = Array.from({ length: 24 }, () => {
     const image = document.createElement('img');
     image.src = '/assets/favicon.svg';
     image.alt = '';
@@ -89,16 +89,16 @@
   function reset() {
     width = stage.clientWidth;
     height = stage.clientHeight;
-    size = (width <= 600 ? 32 : 48) * 1.3;
+    size = (width <= 600 ? 32 : 48) * 1.3 * 1.5;
     sprites.forEach((sprite, index) => {
       sprite.image.style.width = `${size}px`;
       sprite.image.style.height = `${size}px`;
       sprite.originX = (width - size) * (index + .5) / sprites.length;
       sprite.y = reducedMotion.matches
         ? (height - size) * (index + 1) / (sprites.length + 1)
-        : (height + size) * (index + .5) / sprites.length - size;
-      sprite.phase = index * Math.PI / 3;
-      sprite.speed = 45 + index * 7;
+        : (height + size) * ((index * 7) % sprites.length + .5) / sprites.length - size;
+      sprite.phase = index * Math.PI * 2 / sprites.length;
+      sprite.speed = 45 + 35 * index / (sprites.length - 1);
     });
     paint();
   }
