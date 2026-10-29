@@ -5,8 +5,32 @@ const address = document.querySelector('#address');
 const addressForm = address.querySelector('form');
 const formText = addressForm.querySelectorAll('h2, .entrance-form-intro, .field label, .btn, .submission-status');
 const galleryPhotos = document.querySelectorAll('.entrance-gallery-photo');
+const catButtons = document.querySelectorAll('.address-cat');
 let exitTimer;
 let formTextObserver;
+
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+function hideCatGreetings() {
+  for (const button of catButtons) {
+    button.setAttribute('aria-expanded', 'false');
+    button.querySelector('.cat-speech').hidden = true;
+  }
+}
+
+for (const button of catButtons) {
+  button.disabled = false;
+  button.addEventListener('click', () => {
+    const wasOpen = button.getAttribute('aria-expanded') === 'true';
+    hideCatGreetings();
+    if (wasOpen) return;
+    button.setAttribute('aria-expanded', 'true');
+    button.querySelector('.cat-speech').hidden = false;
+  });
+  button.addEventListener('keydown', event => {
+    if (event.key === 'Escape') hideCatGreetings();
+  });
+}
 
 function resetFormText() {
   formTextObserver?.disconnect();
@@ -28,8 +52,16 @@ function resetFormText() {
   }
 }
 
+function clearAddressHash() {
+  if (location.hash !== '#address' || !document.body.classList.contains('is-ready') ||
+      Math.abs(address.getBoundingClientRect().top) > 1) return;
+  history.replaceState(history.state, '', `${location.pathname}${location.search}`);
+  document.documentElement.classList.add('is-address-entry');
+}
+
 function updatePhotoCopyPosition() {
   photoCopy.style.top = `${-window.scrollY}px`;
+  clearAddressHash();
 }
 
 function updateGalleryStickyPositions() {
@@ -40,7 +72,8 @@ function updateGalleryStickyPositions() {
 }
 
 function playEntrance() {
-  const directAddress = location.hash === '#address';
+  const directAddress = document.documentElement.classList.contains('is-address-entry') ||
+    location.hash === '#address';
   document.documentElement.classList.toggle('is-address-entry', directAddress);
   window.clearTimeout(exitTimer);
   document.body.classList.remove('is-ready', 'is-expanded');
@@ -55,6 +88,7 @@ function playEntrance() {
     completeEntrance(true);
     if (directAddress) address.scrollIntoView({ behavior: 'instant', block: 'start' });
   }
+  clearAddressHash();
 }
 
 function completeEntrance(skipAnimation = false) {

@@ -31,7 +31,7 @@ The personal fork has been deleted.
 | Page | Purpose |
 |---|---|
 | `/` (home) | Hero, The Day, gallery. Its main button points to whichever form is current: "Save the Date" in phase 1, "RSVP" in phase 2 |
-| `/save-the-date/` | A short page meant to be opened from a text message: photo, names and date, then the address form. Its thank-you message links to home |
+| `/save-the-date/` | A short page meant to be opened from a text message: photo, names and date, then the address form. Success keeps the disabled Sent! button visible without a separate thank-you message |
 | `/rsvp/` | Photo, names, date, time and dress code, then the RSVP form. Until RSVPs open it shows *"RSVPs open in April. Watch your mailbox!"* in place of the form |
 
 All three pages share `style.css` and `script.js`. The header and footer markup is copied into each page. For three pages that's simpler than adding a build step or templating.
@@ -193,7 +193,8 @@ The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both 
 | `note` | Note to the couple | textarea | | |
 | `website` | (hidden honeypot) | text, visually hidden, `tabindex="-1"` | | `off` |
 
-Success message: *"Thank you! Watch your mailbox for the invitation. 💌"*
+Success state: the button says **Sent!** and stays visible and disabled.
+There is no separate thank-you heading or message.
 
 ### 4.2 RSVP form: phase 2
 
@@ -217,7 +218,8 @@ Kim Son typically serves a set banquet menu, so a meal-choice field is left out.
 1. Use native HTML validation (`required`, `type="email"`, `min`/`max`). No validation library.
 2. On submit, `fetch` a JSON `POST` to `{SUPABASE_URL}/rest/v1/{table}` with the `apikey` header and `Prefer: return=minimal`. Success is HTTP `201`; anything else is a failure. A filled honeypot skips the request and shows success.
 3. Disable the button and show "Sending…" while the request runs, which prevents double submits.
-4. On success, replace the form with the thank-you message.
+4. On address success, keep the form visible and the button disabled with "Sent!".
+   Do not show a separate thank-you block.
 5. **Address autocomplete (save-the-date only).** Typing in Street address suggests addresses from the Google Places API (New). Picking one fills street, unit, city, state, ZIP and country; every field stays editable and failures are silent, so typing by hand always works. The Google key in `script.js` is public by design, so it must stay restricted in Google Cloud Console to HTTP referrers (`trisaandcharleswedding.com/*`, `www.…/*`, `localhost:8000/*` for testing) and to Places API (New) only, with a daily quota cap and a billing budget alert.
 6. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
 

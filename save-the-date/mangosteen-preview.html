@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mangosteen animation preview</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/save-the-date/save-the-date.css">
+<style>
+.preview-note { padding: .5rem; background: var(--form-paper); }
+</style>
+<script src="/save-the-date/mangosteen.js" defer></script>
+</head>
+<body class="entrance-page mangosteen-preview">
+<main class="entrance-address" id="animation-stage" data-mangosteens>
+  <div class="mangosteen-field" aria-hidden="true"></div>
+  <div class="entrance-form">
+    <form aria-labelledby="address-title" aria-describedby="preview-status">
+      <h2 id="address-title">Mailing Address</h2>
+      <p class="entrance-form-intro">Formal invitation to follow</p>
+      <div class="mangosteen-controls">
+        <button class="mangosteen-toggle" type="button" aria-pressed="false" hidden>Pause animation</button>
+      </div>
+      <div class="field"><label for="name">Name</label>
+        <input id="name" type="text" autocomplete="off"></div>
+      <div class="field"><label for="email">Email</label>
+        <input id="email" type="email" autocomplete="off"></div>
+      <div class="field"><label for="address1">Street address</label>
+        <input id="address1" type="text" autocomplete="off"></div>
+      <div class="field"><label for="address2">Apt / Unit (optional)</label>
+        <input id="address2" type="text" autocomplete="off"></div>
+      <div class="field"><label for="city">City</label>
+        <input id="city" type="text" autocomplete="off"></div>
+      <div class="field"><label for="state">State / Province</label>
+        <input id="state" type="text" autocomplete="off"></div>
+      <div class="field"><label for="zip">ZIP / Postal code</label>
+        <input id="zip" type="text" autocomplete="off"></div>
+      <div class="field"><label for="country">Country</label>
+        <input id="country" type="text" autocomplete="off" value="United States"></div>
+      <button class="btn" type="submit" disabled>Send my address</button>
+      <p class="submission-status preview-note" id="preview-status" role="status">Animation preview only. No addresses are sent or stored.</p>
+    </form>
+  </div>
+</main>
+<script>
+document.querySelector('form').addEventListener('submit', event => event.preventDefault());
+const previewMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+function updatePreviewStatus() {
+  document.querySelector('#preview-status').textContent = previewMotion.matches
+    ? 'Animation preview only. Reduced motion is enabled; artwork is static. No addresses are sent or stored.'
+    : 'Animation preview only. No addresses are sent or stored.';
+}
+previewMotion.addEventListener('change', updatePreviewStatus);
+updatePreviewStatus();
+</script>
+</body>
+</html>
