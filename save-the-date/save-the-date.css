@@ -70,7 +70,7 @@
   margin: 0;
   padding: clamp(1rem, 2.5svh, 2rem) 0 clamp(1.5rem, 5svh, 3rem);
   color: inherit;
-  font: 400 clamp(2rem, min(17.5cqw, calc(14svh - max(2rem, 7cqw))), 16.5rem)/1 var(--font-editorial);
+  font: 400 clamp(1.75rem, 8cqw, 5.5rem)/1 var(--font-editorial);
   letter-spacing: -.055em;
   text-align: center;
 }
@@ -106,7 +106,7 @@
   object-position: center;
 }
 @media (min-width: 601px) {
-  .entrance-date { padding-top: 0; font-size: clamp(2rem, min(9.75cqw, calc(28svh - 9rem)), 16.5rem); white-space: nowrap; }
+  .entrance-date { padding-top: 0; font-size: clamp(1.75rem, min(8cqw, calc(28svh - 9rem)), 5.5rem); white-space: nowrap; }
   .entrance-date span { display: inline-block; max-width: none; margin: 0; padding: 0 .025em; }
   .entrance-gallery-photo { height: auto; }
   .entrance-gallery-image { position: relative; display: block; height: auto; }
@@ -252,7 +252,7 @@
 [data-mangosteens] h2,
 [data-mangosteens] .entrance-form-intro,
 [data-mangosteens] .submission-status,
-[data-mangosteens] .error { width: fit-content; background: var(--form-paper); }
+[data-mangosteens] .error { width: fit-content; background: transparent; }
 [data-mangosteens] h2,
 [data-mangosteens] .entrance-form-intro,
 [data-mangosteens] .submission-status { margin-left: auto; margin-right: auto; }

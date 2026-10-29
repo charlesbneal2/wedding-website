@@ -162,7 +162,9 @@ input text. The preview retains Pause/Resume until completion; reduced motion us
 scattered static artwork without automatic falling.
 The main site's animation starts when the address section enters view and
 pauses while it is offscreen. Keep it behind the real form, not over the
-photographs. Inputs and text have opaque paper backing for readability.
+photographs. Inputs keep opaque paper backing for readability. Labels, headings,
+introductory text, and status/error messages have transparent backgrounds so
+the falling fruit stays visible behind the lettering without rectangular cutouts.
 The main form has no animation-control button; the finite effect stops
 automatically. Cat greetings never submit the form. Preserve the real address
 submission handler and Places autocomplete.
@@ -184,14 +186,14 @@ or a query-selected study.
 
 The opening introduction reads "Together with our families," followed by
 "we invite you to", then the image-filled SAVE THE DATE headline.
-The first photograph contains "Trisa Vo & Charles Neal", "Saturday, June 26, 2027",
+The first photograph contains "Trisa & Charles", "Saturday, June 26, 2027",
 "Houston, Texas", and "Share your mailing address".
 
 The date stays visible on the first photograph after the original SAVE THE DATE
 entrance. On mobile, show two top-centered lines below the names: "Saturday,"
-then "June 26, 2027". Keep Marcellus and size the second line nearly edge to edge
-on portrait phones, using the full photo width rather than the copy's narrower
-padded width. On desktop, keep the full date together on one line. Cap the font
+then "June 26, 2027". Keep Marcellus and restore the previous deployment's
+calmer date scale: 8cqw, with a 28px minimum and 88px maximum, rather than
+near-edge-to-edge lettering. On desktop, keep the full date on one line. Cap the font
 size by available height so the date stays above Charles's head without
 overlapping the names or address CTA. On short landscape screens, let the
 hero grow to preserve that clearance. Keep the date in normal
