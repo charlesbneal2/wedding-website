@@ -70,7 +70,7 @@
     image.src = '/assets/favicon.svg';
     image.alt = '';
     field.append(image);
-    return { image, x: 0, y: 0, vx: 0, vy: 0, age: 0 };
+    return { image, originX: 0, y: 0, phase: 0, speed: 0 };
   });
   let width = 0;
   let height = 0;
@@ -81,24 +81,24 @@
 
   const paint = () => {
     for (const sprite of sprites) {
-      sprite.image.style.transform = `translate3d(${Math.round(sprite.x)}px, ${Math.round(sprite.y)}px, 0)`;
+      const x = sprite.originX + Math.sin(sprite.phase) * Math.min(32, width * .06);
+      sprite.image.style.transform = `translate3d(${Math.round(Math.max(0, Math.min(width - size, x)))}px, ${Math.round(sprite.y)}px, 0)`;
     }
   };
 
   function reset() {
     width = stage.clientWidth;
     height = stage.clientHeight;
-    size = width <= 600 ? 32 : 48;
+    size = (width <= 600 ? 32 : 48) * 1.3;
     sprites.forEach((sprite, index) => {
       sprite.image.style.width = `${size}px`;
       sprite.image.style.height = `${size}px`;
-      sprite.x = (width - size) * (index + .5) / sprites.length;
+      sprite.originX = (width - size) * (index + .5) / sprites.length;
       sprite.y = reducedMotion.matches
         ? (height - size) * (index + 1) / (sprites.length + 1)
-        : -size * (1 + index * 3);
-      sprite.vx = (index % 2 ? 1 : -1) * (70 + index * 12);
-      sprite.vy = 0;
-      sprite.age = index * .6;
+        : (height + size) * (index + .5) / sprites.length - size;
+      sprite.phase = index * Math.PI / 3;
+      sprite.speed = 45 + index * 7;
     });
     paint();
   }
@@ -107,22 +107,10 @@
     const dt = previous ? Math.min((time - previous) / 1000, .035) : 0;
     previous = time;
     for (const sprite of sprites) {
-      sprite.vy += 800 * dt;
-      sprite.x += sprite.vx * dt;
-      sprite.y += sprite.vy * dt;
-      sprite.age += dt;
-      if (sprite.x < 0 || sprite.x > width - size) {
-        sprite.x = Math.max(0, Math.min(width - size, sprite.x));
-        sprite.vx *= -1;
-      }
-      if (sprite.y > height - size) {
-        sprite.y = height - size;
-        sprite.vy = -Math.max(180, Math.abs(sprite.vy) * .76);
-      }
-      if (sprite.age > 14 && sprite.y > height - size * 3) {
+      sprite.phase += dt * .7;
+      sprite.y += sprite.speed * dt;
+      if (sprite.y > height) {
         sprite.y = -size;
-        sprite.vy = 0;
-        sprite.age = 0;
       }
     }
     paint();

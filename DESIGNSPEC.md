@@ -118,8 +118,11 @@ footer lace, lotus, or separate credits block.
 ### Separate mangosteen motion preview
 
 The explicitly requested standalone HTML preview reuses `assets\favicon.svg`
-as six decorative pixel mangosteens. They fall from the top of the mailing
-area, bounce off its bottom and sides, and periodically fall again.
+as six decorative pixel mangosteens, 30% larger than the original preview
+(41.6px on mobile, 62.4px on desktop). They drift gently downward like falling
+snow, sway side to side, and reappear above the mailing area after passing
+its bottom. Stagger their positions and falling speeds for a continuous flow;
+do not use gravity, bouncing, or collisions.
 Artwork sits behind the form and does not intercept pointer events or obscure
 input text. Pause/Resume is available; reduced motion uses static artwork.
 The preview loads neither the submission handler nor Places autocomplete,
