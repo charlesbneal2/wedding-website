@@ -160,6 +160,7 @@
 
 .entrance-address { position: relative; z-index: 2; min-height: 100svh; overflow: clip; background: var(--form-paper); color: var(--berry); }
 .entrance-form { max-width: 688px; margin: 0 auto; }
+.entrance-form:has(> .address-thanks:not([hidden])) { max-width: none; }
 .entrance-form > form { position: relative; padding: 4rem 1.5rem; }
 .entrance-form h2 { margin: 0 0 .4rem; font: 700 1.4rem/1.5 var(--font-body); letter-spacing: .025em; text-align: center; text-transform: uppercase; }
 .entrance-form-intro { margin: 0 0 3rem; font-size: .9rem; font-weight: 700; text-align: center; text-transform: uppercase; }
@@ -241,17 +242,70 @@
 .entrance-form .btn:disabled { opacity: 1; cursor: default; }
 .entrance-form .btn:hover { border-color: var(--ink); background: var(--ink); color: var(--form-paper); }
 .submission-status { margin: 1rem 0 0; font-size: .65rem; text-align: center; }
+.address-thanks {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+.address-thanks-content {
+  display: grid;
+  grid-area: 1 / 1;
+  justify-items: center;
+  gap: 1.25rem;
+  max-width: 100%;
+}
+.address-thanks-back {
+  position: sticky;
+  top: 1.5rem;
+  grid-area: 1 / 1;
+  align-self: start;
+  justify-self: start;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.address-thanks-back svg { pointer-events: none; }
+.address-thanks-back:hover { color: var(--button-purple); }
+.address-thanks:not([hidden]) .address-thanks-content {
+  animation: reveal-title .8s cubic-bezier(.2, .65, .25, 1) both;
+}
+.address-thanks p {
+  max-width: 28ch;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(1.125rem, 4vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: .1em;
+  line-height: 1.7;
+  text-transform: uppercase;
+}
+.address-thanks .address-thanks-title { font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.4; }
 .entrance-form :focus-visible { outline-color: var(--berry); }
 
 [data-mangosteens] { isolation: isolate; }
 .mangosteen-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+[data-mangosteens]:has(.address-thanks[hidden]) .mangosteen-field { display: none; }
 .mangosteen-field img { position: absolute; top: 0; left: 0; image-rendering: pixelated; will-change: transform; }
 [data-mangosteens] .entrance-form {
   position: relative;
+  z-index: 2;
+}
+[data-mangosteens]:not(:has(.address-thanks[hidden]))::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   z-index: 1;
   background: rgb(255 250 240 / 60%);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
+  pointer-events: none;
 }
 [data-mangosteens] .entrance-form input { background: var(--form-paper); }
 [data-mangosteens] label,

@@ -2,6 +2,7 @@
   const stage = document.querySelector('[data-mangosteens]');
   const field = stage.querySelector('.mangosteen-field');
   const toggle = stage.querySelector('.mangosteen-toggle');
+  const confirmation = stage.querySelector('.address-thanks');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const sprites = Array.from({ length: 24 }, (_, index) => {
     const image = document.createElement('img');
@@ -27,6 +28,7 @@
   let elapsed = 0;
   let paused = false;
   let complete = false;
+  let active = !confirmation || !confirmation.hidden;
   let visible = !('IntersectionObserver' in window);
 
   const paint = () => {
@@ -34,7 +36,7 @@
       const age = elapsed - sprite.delay;
       const y = reducedMotion.matches ? sprite.staticY : sprite.startY + Math.max(0, age) * sprite.speed;
       if (!reducedMotion.matches && age >= 0 && y > height) sprite.finished = true;
-      sprite.image.hidden = complete || sprite.finished || (!reducedMotion.matches && age < 0);
+      sprite.image.hidden = !active || complete || sprite.finished || (!reducedMotion.matches && age < 0);
       const x = sprite.originX + Math.sin(sprite.phase + elapsed * .7) * Math.min(32, width * .06);
       sprite.image.style.transform = `translate3d(${Math.round(Math.max(0, Math.min(width - size, x)))}px, ${Math.round(y)}px, 0)`;
     }
@@ -76,12 +78,29 @@
       toggle.textContent = complete ? 'Animation complete' : paused ? 'Resume animation' : 'Pause animation';
       toggle.setAttribute('aria-pressed', String(paused));
     }
-    if (!complete && !paused && !reducedMotion.matches && !document.hidden && visible) {
+    if (active && !complete && !paused && !reducedMotion.matches && !document.hidden && visible) {
       frame = window.requestAnimationFrame(animate);
     }
   }
 
   toggle?.addEventListener('click', () => { paused = !paused; syncMotion(); });
+  if (confirmation) {
+    new MutationObserver(() => {
+      const nextActive = !confirmation.hidden;
+      if (nextActive === active) return;
+      active = nextActive;
+      if (active) {
+        elapsed = 0;
+        complete = false;
+        paused = false;
+        sprites.forEach(sprite => { sprite.finished = false; });
+        reset();
+      } else {
+        paint();
+      }
+      syncMotion();
+    }).observe(confirmation, { attributes: true, attributeFilter: ['hidden'] });
+  }
   reducedMotion.addEventListener('change', () => { reset(); syncMotion(); });
   document.addEventListener('visibilitychange', syncMotion);
   if ('ResizeObserver' in window) {

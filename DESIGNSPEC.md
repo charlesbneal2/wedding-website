@@ -100,7 +100,7 @@ Do not make readable content depend on an external font loading successfully.
 | Form paper | `#fffaf0` | Solid cream mailing-address section |
 | Berry | `#80505d` | Form headings, labels, and entered text |
 | Purple | `#57223b` | Send-address button default background and border |
-| Pink-magenta | `#b54d66` | Accent fruit behind the mailing form and in its preview |
+| Pink-magenta | `#b54d66` | Accent fruit behind the thank-you message and in its preview |
 | Olive ink | `#3d4936` | Holding-page copy and submit-button hover |
 | White | `#ffffff` | Copy over the first Save the Date photograph |
 
@@ -160,18 +160,25 @@ starts occur after approximately 0.54 to 3.57 seconds, with falling speeds of
 Each fruit falls once, then disappears; stop when
 all 24 have finished. Resizing or changing tab visibility must not restart
 completed fruit. Do not use gravity, bouncing, collisions, or an endless loop.
-Artwork sits behind the form and does not intercept pointer events or obscure
-input text. The preview retains Pause/Resume until completion; reduced motion uses
+Artwork sits behind the thank-you message and does not intercept pointer events.
+The preview retains Pause/Resume until completion; reduced motion uses
 scattered static artwork without automatic falling.
-The main site's animation starts when the address section enters view and
-pauses while it is offscreen. Keep it behind the real form, not over the
+The main site's animation starts after a successful save and pauses while the
+address section is offscreen. Keep it behind the confirmation, not the inputs or
 photographs. Inputs keep opaque paper backing for readability. Labels, headings,
-introductory text, and status/error messages have transparent backgrounds so
-the falling fruit stays visible behind the lettering without rectangular cutouts.
-Use one translucent cream panel behind the entire form: 60% form-paper tint
-with a 4px backdrop blur. Fruit behind the panel stays visible but softly
-blurred; text, cats, and controls remain sharp. Keep the original form styling
-and full-width fruit scatter, not pixel brackets, stepped buttons, or edge lanes.
+introductory text, and status/error messages have transparent backgrounds.
+Keep mangosteens and the frosted overlay hidden while the address form is
+visible, including during pending or failed submissions. Start a fresh finite
+fruit animation only when a successful submission reveals the thank-you panel.
+Returning to the form hides the fruit and stops the animation; a later successful
+submission starts it again. Reduced motion shows static fruit only on confirmation.
+Use one uniform translucent cream overlay across the entire thank-you section:
+60% form-paper tint with a 4px backdrop blur. Fruit stays visible but softly
+blurred across the full width, including outside the centered form on desktop.
+Text, cats, and controls remain sharp. Keep the original form styling and
+full-width fruit scatter, not pixel brackets, stepped buttons, or edge lanes.
+Use a non-interactive background pseudo-element between the fruit and the
+form, with no gradient or mask.
 The main form has no animation-control button; the finite effect stops
 automatically. Cat greetings never submit the form. Preserve the real address
 submission handler and Places autocomplete.
@@ -324,17 +331,36 @@ just because the backend has compatibility columns.
 | Backend not configured | Button disabled; show "Address collection is being set up. Please check back soon." No request or success claim |
 | Ready | Button says "Send my address"; purple by default, green on hover |
 | Sending | Button disabled and says "Sending..."; do not create duplicate submissions |
-| Confirmed save | Button says "Sent!" and remains visible and disabled; no separate thank-you message |
+| Confirmed save | Replace the whole form with a centered box saying "Thank you! We have received your information." |
 | Failure | Restore the send label and enabled button, show the error, and preserve the entered information for retry |
 
 The sending label uses the existing typographic ellipsis in the interface.
 Success requires HTTP 201 from Supabase.
-Do not hide the address form or force a scroll away from its Sent! button.
+After confirmation, hide the form and show its sibling thank-you panel. Keep
+the panel at least as tall as both the submitted form and the current viewport,
+so the section does not collapse or expose the previous photograph when centered.
+Move keyboard focus to the panel and immediately center it in view.
+Use the existing cream, berry, and frosted styling with no panel border;
+the message stays sharp.
+Show "Thank you!" on its own line, then "We have received your information."
+Keep this content together in one centered group without an illustration.
+Use Libre Baskerville 700, uppercase with .1em tracking: the same font as the
+Send my address button, but bolder for readability. Reveal the group immediately on
+success with the date's `reveal-title` animation: 0.8 seconds,
+`cubic-bezier(.2, .65, .25, 1)`, no delay, then keep it visible.
+Reduced motion shows the confirmation immediately without animation.
+Keep a keyboard-accessible "<" return button at the top left of the
+confirmation, using a 36px rounded chevron with a 3-unit stroke and a 44px
+minimum touch target. Offset the SVG framing so the visible chevron has
+equal top and left margins, not just its invisible button bounds. Keep it visible when the
+tall confirmation is centered in the viewport. Use matching 1.5rem top and
+left insets on both mobile and desktop, measured from the full-width
+thank-you area rather than the centered form column. Returning resets the fields
+and autocomplete suggestions for a new submission, restores the send button,
+and focuses Name without resending the previous address.
 Repeated submits while sending or after success must not create another request.
-The changing button label has a polite live-region announcement.
-
-The Sent! button is the only success confirmation. Do not show a separate
-"Thank you!" heading or "We have your address" paragraph beneath it.
+The changing button label and the thank-you panel have polite live-region
+announcements. Never show the thank-you panel while sending or after a failure.
 
 The error explains that something went wrong and provides the existing contact
 email. Image-load failures also show explicit refresh guidance.
@@ -456,7 +482,7 @@ browser emulation alone is not final device acceptance.
 
 - [ ] An unconfigured backend cannot send data or display Sent!/saved confirmation.
 - [ ] Pending and successful submissions cannot be submitted twice.
-- [ ] Confirmed saves leave a visible disabled Sent! button without a separate thank-you block.
+- [ ] Confirmed saves replace the entire form with the focused, visible thank-you box without collapsing the section.
 - [ ] Network, HTTP, or database failures show a retryable error and preserve fields.
 - [ ] An authorized live endpoint saves one approved synthetic submission into the `addresses` table.
 - [ ] The original repository push, hosted routes/assets, domain, HTTPS, and mobile/desktop guest flows are verified.
@@ -483,7 +509,7 @@ These records do not substitute for the live acceptance gates above.
 | `save-the-date\save-the-date.css` | Curtain, gallery, cream form, responsive rules, motion |
 | `save-the-date\save-the-date.js` | Entrance lifecycle, hash bypass, reveals, sticky offsets, image errors |
 | `save-the-date\mangosteen-preview.html` | Isolated favicon animation experiment with no backend submission |
-| `script.js` | Supabase insert, config gate, sending/error/Sent! states, duplicate-submit protection |
+| `script.js` | Supabase insert, config gate, sending/error/thank-you states, duplicate-submit protection |
 | `supabase\schema.sql` | Table, constraints, insert-only row-level security |
 | `README.md` | Clone and local-launch instructions |
 | `SPEC.md`, `DEPLOYMENT.md` | Functional/backend reference and deployment/domain rollout |

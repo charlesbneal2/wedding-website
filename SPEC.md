@@ -31,7 +31,7 @@ The personal fork has been deleted.
 | Page | Purpose |
 |---|---|
 | `/` (home) | Hero, The Day, gallery. Its main button points to whichever form is current: "Save the Date" in phase 1, "RSVP" in phase 2 |
-| `/save-the-date/` | A short page meant to be opened from a text message: photo, names and date, then the address form. Success keeps the disabled Sent! button visible without a separate thank-you message |
+| `/save-the-date/` | A short page meant to be opened from a text message: photo, names and date, then the address form. Success replaces the form with a clear thank-you box |
 | `/rsvp/` | Photo, names, date, time and dress code, then the RSVP form. Until RSVPs open it shows *"RSVPs open in April. Watch your mailbox!"* in place of the form |
 
 All three pages share `style.css` and `script.js`. The header and footer markup is copied into each page. For three pages that's simpler than adding a build step or templating.
@@ -193,8 +193,19 @@ The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both 
 | `note` | Note to the couple | textarea | | |
 | `website` | (hidden honeypot) | text, visually hidden, `tabindex="-1"` | | `off` |
 
-Success state: the button says **Sent!** and stays visible and disabled.
-There is no separate thank-you heading or message.
+Success state: replace the whole address form with a centered box saying
+**Thank you! We have received your information.** Keep the box at least as
+tall as both the submitted form and the current viewport, focus it, and bring
+its message into view without exposing the previous photograph.
+Put "Thank you!" on its own line above "We have received your information.",
+without an illustration. Use the Send my address button's Libre Baskerville
+font in bold (700), in all caps, with the date's quick 0.8-second slide-in,
+with no delay and no animation for reduced motion.
+Keep falling mangosteens out of the input form. Start their frosted animation
+only on successful confirmation; hide and stop it when returning to the form.
+Each new confirmation restarts the fruit, with static fruit for reduced motion.
+The top-left "<" return button restores a fresh form (Country defaults to
+United States), clears stale autocomplete suggestions, and focuses Name.
 
 ### 4.2 RSVP form: phase 2
 
@@ -218,8 +229,9 @@ Kim Son typically serves a set banquet menu, so a meal-choice field is left out.
 1. Use native HTML validation (`required`, `type="email"`, `min`/`max`). No validation library.
 2. On submit, `fetch` a JSON `POST` to `{SUPABASE_URL}/rest/v1/{table}` with the `apikey` header and `Prefer: return=minimal`. Success is HTTP `201`; anything else is a failure. A filled honeypot skips the request and shows success.
 3. Disable the button and show "Sending…" while the request runs, which prevents double submits.
-4. On address success, keep the form visible and the button disabled with "Sent!".
-   Do not show a separate thank-you block.
+4. On address success, keep the send button disabled and replace the form with
+   the full-height thank-you panel. Focus the panel and center it in view.
+   Never show this confirmation while sending or after a failed request.
 5. **Address autocomplete (save-the-date only).** Typing in Street address suggests addresses from the Google Places API (New). Picking one fills street, unit, city, state, ZIP and country; every field stays editable and failures are silent, so typing by hand always works. The Google key in `script.js` is public by design, so it must stay restricted in Google Cloud Console to HTTP referrers (`trisaandcharleswedding.com/*`, `www.…/*`, `localhost:8000/*` for testing) and to Places API (New) only, with a daily quota cap and a billing budget alert.
 6. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
 

@@ -6,13 +6,16 @@ const { test } = require('node:test');
 
 const source = readFileSync(join(__dirname, 'mangosteen.js'), 'utf8');
 
-function preview(width = 1440, reduced = false, observed = false, controls = true) {
+function preview(width = 1440, reduced = false, observed = false, controls = true, confirmationOnly = false) {
   const images = [];
   const frames = new Map();
+  const confirmation = confirmationOnly ? { hidden: true } : null;
   const stage = {
     clientWidth: width, clientHeight: 1218,
     querySelector(selector) {
-      return selector === '.mangosteen-field' ? { append(image) { images.push(image); } } : controls ? toggle : null;
+      if (selector === '.mangosteen-field') return { append(image) { images.push(image); } };
+      if (selector === '.address-thanks') return confirmation;
+      return controls ? toggle : null;
     },
   };
   const toggle = { addEventListener(event, callback) { this[event] = callback; }, setAttribute() {} };
@@ -29,6 +32,7 @@ function preview(width = 1440, reduced = false, observed = false, controls = tru
   };
   let resize;
   let intersection;
+  let confirmationChanged;
   let nextId = 0;
   let time = 0;
   class ResizeObserver {
@@ -39,6 +43,10 @@ function preview(width = 1440, reduced = false, observed = false, controls = tru
     constructor(callback) { intersection = callback; }
     observe() {}
   }
+  class MutationObserver {
+    constructor(callback) { confirmationChanged = callback; }
+    observe(target) { assert.equal(target, confirmation); }
+  }
   const math = Object.create(Math);
   math.random = () => .5;
   vm.runInNewContext(source, {
@@ -46,6 +54,7 @@ function preview(width = 1440, reduced = false, observed = false, controls = tru
     Math: math,
     ResizeObserver,
     IntersectionObserver,
+    MutationObserver,
     window: {
       ResizeObserver,
       ...(observed ? { IntersectionObserver } : {}),
@@ -63,6 +72,10 @@ function preview(width = 1440, reduced = false, observed = false, controls = tru
     visible: () => images.filter(image => !image.hidden),
     resize: () => resize(),
     enter: visible => intersection([{ isIntersecting: visible }]),
+    confirm(visible) {
+      confirmation.hidden = !visible;
+      confirmationChanged();
+    },
     advance(seconds, inspect = () => {}) {
       for (let step = 0; step < seconds * 50; step++) {
         time += 20;
@@ -171,5 +184,51 @@ test('main-page fruit waits for the address section and pauses offscreen without
   page.enter(true);
   page.advance(5);
   assert.equal(page.visible().length, 0);
+  assert.equal(page.frames.size, 0);
+});
+
+test('confirmation fruit stays absent from the form and starts fresh after each successful save', () => {
+  const page = preview(390, false, true, false, true);
+  page.enter(true);
+  page.advance(10);
+  assert.equal(page.visible().length, 0);
+  assert.equal(page.frames.size, 0);
+
+  page.confirm(true);
+  assert.equal(page.visible().length, 18);
+  const start = page.images[0].style.transform;
+  page.advance(1);
+  assert.notEqual(page.images[0].style.transform, start);
+  page.confirm(false);
+  page.advance(10);
+  assert.equal(page.visible().length, 0);
+  assert.equal(page.frames.size, 0);
+
+  page.confirm(true);
+  assert.equal(page.images[0].style.transform, start);
+  page.advance(60);
+  assert.equal(page.visible().length, 0);
+  assert.equal(page.frames.size, 0);
+  page.confirm(false);
+  page.confirm(true);
+  assert.equal(page.visible().length, 18);
+  assert.equal(page.frames.size, 1);
+  assert.equal(page.images[0].style.transform, start);
+});
+
+test('reduced-motion fruit is static and visible only on confirmation', () => {
+  const page = preview(390, true, true, false, true);
+  page.enter(true);
+  assert.equal(page.visible().length, 0);
+  page.confirm(true);
+  assert.equal(page.visible().length, 24);
+  const positions = page.visible().map(image => image.style.transform);
+  page.advance(10);
+  assert.deepEqual(page.visible().map(image => image.style.transform), positions);
+  assert.equal(page.frames.size, 0);
+  page.confirm(false);
+  assert.equal(page.visible().length, 0);
+  page.confirm(true);
+  assert.equal(page.visible().length, 24);
   assert.equal(page.frames.size, 0);
 });

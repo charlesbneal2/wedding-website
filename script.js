@@ -51,10 +51,26 @@ document.querySelectorAll('form[data-form]').forEach(form => {
   const btn = form.querySelector('button[type=submit]');
   const error = form.querySelector('.error');
   const backendStatus = form.querySelector('[data-backend-status]');
+  const thanks = form.parentElement.querySelector('.thanks');
+  const initialLabel = btn.textContent;
   const table = TABLES[form.dataset.form];
   const backendConfigured = Boolean(table && SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
   btn.disabled = !backendConfigured;
   if (backendStatus) backendStatus.hidden = backendConfigured;
+
+  if (form.dataset.form === 'address') {
+    thanks.querySelector('[data-address-back]').addEventListener('click', () => {
+      form.reset();
+      thanks.hidden = true;
+      thanks.style.minHeight = '';
+      form.hidden = false;
+      error.hidden = true;
+      btn.textContent = initialLabel;
+      btn.disabled = !backendConfigured;
+      form.scrollIntoView({ block: 'start', behavior: 'instant' });
+      form.querySelector('[name="name"]').focus({ preventScroll: true });
+    });
+  }
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -83,19 +99,24 @@ document.querySelectorAll('form[data-form]').forEach(form => {
         });
         if (res.status !== 201) throw new Error(`Submission failed (${res.status})`);
       }
-      if (form.dataset.form === 'address') {
-        btn.textContent = 'Sent!';
-      } else {
-        const thanks = form.parentElement.querySelector('.thanks');
-        form.hidden = true;
-        thanks.hidden = false;
-        thanks.scrollIntoView({ block: 'center' });
-      }
     } catch (failure) {
       console.error('Form submission failed:', failure);
       error.hidden = false; // form stays filled in
       btn.disabled = false;
       btn.textContent = label;
+      return;
+    }
+    if (form.dataset.form === 'address') {
+      btn.textContent = 'Sent!';
+      thanks.style.minHeight = `max(${form.offsetHeight}px, 100dvh)`;
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.focus({ preventScroll: true });
+      thanks.scrollIntoView({ block: 'center', behavior: 'instant' });
+    } else {
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.scrollIntoView({ block: 'center' });
     }
   });
 });
@@ -143,6 +164,14 @@ if (placesStreet && PLACES_API_KEY) {
     placesStreet.removeAttribute('aria-activedescendant');
     active = -1;
   };
+  placesStreet.form.addEventListener('reset', () => {
+    clearTimeout(timer);
+    latest++;
+    close();
+    items = [];
+    list.replaceChildren();
+    session = crypto.randomUUID();
+  });
   const highlight = index => {
     active = index;
     items.forEach((li, i) => li.setAttribute('aria-selected', String(i === index)));
