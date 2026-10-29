@@ -58,6 +58,7 @@ function rowFor(record) {
   const actions = tr.insertCell();
   actions.className = 'actions';
   const save = document.createElement('button');
+  save.className = 'btn small';
   save.textContent = 'Save';
   save.addEventListener('click', async () => {
     const patch = {};
@@ -75,7 +76,7 @@ function rowFor(record) {
   });
 
   const del = document.createElement('button');
-  del.className = 'danger';
+  del.className = 'btn danger small';
   del.textContent = 'Delete';
   del.addEventListener('click', async () => {
     if (!confirm(`Delete ${record.name} (${record.address1})? This cannot be undone.`)) return;

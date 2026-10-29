@@ -6,60 +6,42 @@
 <meta name="robots" content="noindex">
 <title>Admin · Trisa & Charles</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<style>
-  body { margin: 0; padding: 1.5rem; font: 15px/1.5 system-ui, sans-serif; color: #2b2b2b; background: #faf7f2; }
-  h1 { margin: 0 0 1rem; font-size: 1.3rem; }
-  form.login { max-width: 320px; margin: 15vh auto 0; display: grid; gap: .75rem; }
-  input, button { font: inherit; padding: .45rem .6rem; border: 1px solid #b9b2a6; border-radius: 4px; background: #fff; }
-  button { cursor: pointer; background: #57223b; border-color: #57223b; color: #fff; }
-  button.secondary { background: #fff; color: #57223b; }
-  a.btn { display: inline-block; padding: .45rem .6rem; border: 1px solid #57223b; border-radius: 4px; background: #fff; color: #57223b; text-decoration: none; text-align: center; }
-  button.danger { background: #fff; color: #a3261d; border-color: #a3261d; }
-  button:disabled { opacity: .5; cursor: default; }
-  .bar { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
-  .bar .grow { flex: 1; min-width: 12rem; }
-  .msg { min-height: 1.4rem; margin: 0 0 .5rem; }
-  .msg.err { color: #a3261d; }
-  .scroll { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; background: #fff; }
-  th, td { padding: .3rem; border-bottom: 1px solid #e4ded3; text-align: left; vertical-align: middle; white-space: nowrap; }
-  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
-  td input { width: 100%; min-width: 7rem; border-color: transparent; background: transparent; }
-  td input:hover { border-color: #d8d1c4; }
-  td input:focus { border-color: #57223b; background: #fff; }
-  tr.dirty td input.changed { background: #fff6d6; }
-  td.date { font-size: .8rem; color: #777; padding-right: .75rem; }
-  td.actions { display: flex; gap: .4rem; }
-  [hidden] { display: none !important; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Pinyon+Script&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
 
-<form class="login" id="login" hidden>
-  <h1>Admin sign in</h1>
-  <input name="email" type="email" placeholder="Email" autocomplete="username" required>
-  <input name="password" type="password" placeholder="Password" autocomplete="current-password" required>
-  <button type="submit">Sign in</button>
-  <button type="button" class="secondary" id="forgot">Forgot password?</button>
-  <a class="btn" href="/save-the-date/">Back to save the date</a>
+<form class="card" id="login" hidden>
+  <h1 class="brand">Trisa &amp; Charles</h1>
+  <p class="kicker">Admin</p>
+  <label>Email <input name="email" type="email" autocomplete="username" required></label>
+  <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+  <button class="btn" type="submit">Sign in</button>
+  <button class="btn secondary" type="button" id="forgot">Forgot password?</button>
+  <a class="btn secondary" href="/save-the-date/">Back to save the date</a>
   <p class="msg" id="login-msg" role="alert"></p>
 </form>
 
-<form class="login" id="setpw" hidden>
-  <h1>Set a new password</h1>
-  <input name="password" type="password" placeholder="New password (8+ characters)" autocomplete="new-password" minlength="8" required>
-  <input name="confirm" type="password" placeholder="Confirm new password" autocomplete="new-password" minlength="8" required>
-  <button type="submit">Save password</button>
+<form class="card" id="setpw" hidden>
+  <h1 class="brand">Trisa &amp; Charles</h1>
+  <p class="kicker">Set a new password</p>
+  <label>New password <input name="password" type="password" autocomplete="new-password" minlength="8" placeholder="8+ characters" required></label>
+  <label>Confirm password <input name="confirm" type="password" autocomplete="new-password" minlength="8" required></label>
+  <button class="btn" type="submit">Save password</button>
   <p class="msg" id="setpw-msg" role="alert"></p>
 </form>
 
 <main id="app" hidden>
+  <h1 class="brand">Trisa &amp; Charles</h1>
+  <p class="kicker">Mailing addresses</p>
   <div class="bar">
-    <h1 style="margin:0">Addresses <span id="count"></span></h1>
-    <input class="grow" id="filter" type="search" placeholder="Filter by any text" aria-label="Filter rows">
-    <a class="btn" href="/save-the-date/">Save the date page</a>
-    <button class="secondary" id="refresh" type="button">Refresh</button>
-    <button class="secondary" id="logout" type="button">Sign out</button>
+    <h2>Addresses <span id="count"></span></h2>
+    <input id="filter" type="search" placeholder="Filter by any text" aria-label="Filter rows">
+    <a class="btn secondary small" href="/save-the-date/">Save the date page</a>
+    <button class="btn secondary small" id="refresh" type="button">Refresh</button>
+    <button class="btn secondary small" id="logout" type="button">Sign out</button>
   </div>
   <p class="msg" id="msg" role="status"></p>
   <div class="scroll">
