@@ -1,12 +1,17 @@
-# Trisa & Charles Wedding Website: Design Spec
+# Trisa & Charles Wedding Website: Functional and Technical Reference
+
+**Current design:** [`DESIGNSPEC.md`](DESIGNSPEC.md) is authoritative for the
+active pages, fonts, motion, and mobile/desktop acceptance. Earlier full-site
+layouts, RSVP presentation, and visual proposals below are historical or future
+requirements, not instructions to replace the approved current UI.
 
 **Domain:** `trisaandcharleswedding.com`
 **Couple:** Trisa Vo & Charles Neal
 **Event:** Saturday, June 26, 2027 · 5:00 PM · Kim Son Restaurant, 10603 Bellaire Blvd, Houston, TX 77072
 **RSVP by:** Wednesday, May 26, 2027
 **Dress code:** Cocktail attire
-**Repo:** Verified private fork `github.com/trisavo/wedding-website`;
-upstream `github.com/charlesbneal2/wedding-website`
+**Repo:** `github.com/charlesbneal2/wedding-website`, the single source of truth.
+The personal fork has been deleted.
 
 ## 1. Goals
 
@@ -308,16 +313,14 @@ RSVP routes intact. The original branch/root publishing idea is superseded by a
 curated static artifact so development pages and backend files are not included
 in the hosted site.
 
-The fork now exists and is verified. Pages activation was attempted and GitHub
-rejected it: "Your current plan does not support GitHub Pages for this repository."
-An approved eligible plan or an explicitly approved separate public deployment
-repository is needed before publication. No visibility or billing changes have
+The original repository is the sole source and intended deployment repository.
+The personal fork was deleted. Its rejected Pages activation does not establish
+Pages eligibility for the original owner. Verify that owner's repository
+permissions and plan before publication. No visibility or billing changes have
 been made.
 
-1. Authorize GitHub CLI as `trisavo`, create or verify its fork of
-   `charlesbneal2/wedding-website`, and confirm the fork's parent before pushing.
-   The source is private, so its fork remains private and cannot independently
-   become public. Verify administrator access to the fork and Pages eligibility. GitHub Free
+1. Use `charlesbneal2/wedding-website` on `master`; do not recreate the fork.
+   Verify administrator access and Pages eligibility for the original owner. GitHub Free
    supports Pages from public repositories; eligible paid plans can support
    private repositories. Do not change visibility or purchase a plan implicitly.
 2. Prepare a GitHub Actions Pages workflow targeting `master`, initially using
@@ -363,8 +366,8 @@ unrelated records. Reauthenticate in Squarespace if prompted.
 | AAAA | `@` | `2606:50c0:8001::153` |
 | AAAA | `@` | `2606:50c0:8002::153` |
 | AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `trisavo.github.io` *(verified fork owner; configure Pages before applying)* |
-| TXT | `_github-pages-challenge-trisavo` | *(exact name/value supplied by the owning GitHub account in 6.2 step 5)* |
+| CNAME | `www` | `charlesbneal2.github.io` *(original repository owner; configure Pages before applying)* |
+| TXT | `_github-pages-challenge-charlesbneal2` | *(exact name/value supplied by the owning GitHub account in 6.2 step 5)* |
 
 `www` points to the repository owner's `github.io` hostname, not a URL containing
 `/wedding-website`. If ownership changes, replace the owner-specific CNAME/TXT

@@ -1,0 +1,395 @@
+# Trisa & Charles: Approved Design and Handoff
+
+## 1. Authority, scope, and priorities
+
+This is the consolidated source of truth for the current design, its decision
+history, and visual acceptance. It supersedes earlier layout, typography, and
+motion proposals in `SPEC.md` and the former lowercase design spec.
+`SPEC.md` remains the functional/backend reference; `DEPLOYMENT.md` records
+hosting, domain, and launch work. Historical ideas are not instructions to
+restore removed features.
+
+The primary guest task is to view the Save the Date and share a mailing address
+for a formal invitation. The wedding is June 26, 2027, in Houston, Texas.
+The full wedding website and RSVP experience are intentionally not public yet:
+their current routes are simple photographic holding pages.
+
+**Mobile and desktop acceptance are equally important and both are required.**
+A desktop screenshot is not approval for mobile, and a working phone layout is
+not approval for desktop. Check the actual entrance, scrolling, photo framing,
+form interaction, and keyboard behavior, not just a static first screen.
+
+Preserve the warm engagement photography, restrained cream/olive/berry palette,
+legible serif text, and romantic script names. Do not revive discarded
+experiments or add navigation, decoration, or motion without a clear purpose.
+
+## 2. Current pages and exact copy
+
+| Route | Current contents |
+|---|---|
+| `/` | One original armchair photograph and the work-in-progress message below |
+| `/save-the-date/` | Selected automatic curtain entrance A, three stacked photographs, and the cream mailing-address form |
+| `/save-the-date/#address` | The same page, bypassing the entrance and going directly to the form |
+| `/rsvp/` | Its existing sofa photograph and only the message "RSVP opens soon" |
+
+### Home
+
+Visible copy is exactly:
+
+> The full wedding website is a work in progress. Thank you for understanding
+
+Reference the original `assets\img\armchair.jpg`, with
+`assets\img\armchair-800.jpg` as its responsive variant. This is the photograph
+of Charles in the armchair beside Trisa reclining on the sofa, matching the
+user's reference. Do not use the screenshot of that photograph as an asset.
+
+### RSVP
+
+Visible copy is exactly:
+
+> RSVP opens soon
+
+Retain `assets\img\sofa.jpg` and its `sofa-800.jpg` responsive variant.
+Use the same typography and holding-page layout as home.
+The previous event details, reply deadline, opening-month notice, and hidden
+RSVP form were removed from the current page; they are not merely hidden.
+A complete RSVP interface is future work, not part of this approved release.
+
+### Shared holding-page treatment
+
+- One photograph followed by one centered message; no header, navigation,
+  footer, credits block, extra buttons, or additional content.
+- Preserve the entire photograph at its natural 3:4 ratio, without stretching,
+  blur, overlays, or viewport-cover cropping.
+- Center the content, with a maximum width of 480px and responsive outer
+  padding from 24px to 48px.
+- Use a 6px cream photo border, 18px corner radius, and 24px photo/message gap.
+- Keep the pale textured background. These pages have no entrance animation.
+
+## 3. Typography: settled fonts and weights
+
+| Use | Font | Weight and treatment |
+|---|---|---|
+| Home and RSVP messages | Libre Baskerville | 400, 16px, centered; both pages must match |
+| Save the Date curtain headline | Marcellus | 400, uppercase, tight `-.055em` tracking |
+| Couple's names on the first photograph | Pinyon Script | 400; keep the script character |
+| Date on the first photograph | Marcellus | 400, white, responsive size |
+| Curtain introduction, Houston location, and photo CTA | Libre Baskerville | 400; supporting copy, not another decorative face |
+| Mailing Address heading and form introduction | Libre Baskerville | 700; uppercase presentation |
+| Form labels and entered input text | Libre Baskerville | 700; consistent with the heading and easier to read |
+| Submit button and status/error copy | Libre Baskerville | 400; button uses uppercase presentation |
+
+The form heading must not revert to Marcellus or a script font while inputs
+remain in Libre Baskerville. That mismatch was explicitly rejected.
+
+Fonts are loaded from Google Fonts by each page as needed. Home and RSVP load
+Libre Baskerville 400; Save the Date loads Libre Baskerville 400/700,
+Marcellus, and Pinyon Script. Preserve usable fallbacks: Georgia/serif for body
+text, Times New Roman/serif for Marcellus, and Brush Script MT/cursive for names.
+Do not make readable content depend on an external font loading successfully.
+
+## 4. Color, texture, and shapes
+
+| Role | Value | Current application |
+|---|---|---|
+| Holding-page background | `#e8e9df` | Home and RSVP |
+| Cream paper | `#f5f0e7` | Curtains and holding-photo borders |
+| Form paper | `#fffaf0` | Solid cream mailing-address section |
+| Berry | `#80505d` | Form headings, labels, and entered text |
+| Purple | `#57223b` | Send-address button default background and border |
+| Olive ink | `#3d4936` | Holding-page copy and submit-button hover |
+| White | `#ffffff` | Copy over the first Save the Date photograph |
+
+The submit button turns green on hover and retains light text. It must remain
+readable in its disabled state, not become faint. Keyboard focus is visible
+without requiring hover. Keep the existing pill shape for buttons.
+
+The address section and input boxes have square corners; the rounded cream
+photo frames belong to the holding pages, not the Save the Date gallery.
+Use the existing subtle paper grain, not new oversized artwork.
+Keep the original pixel-art mangosteen favicon. No active page has a footer,
+footer lace, lotus, or separate credits block.
+
+## 5. Save the Date: content and photographs
+
+The canonical experience is `/save-the-date/`, not an entrance-preview URL
+or a query-selected study.
+
+| Order | Photograph | Source and responsive variant |
+|---|---|---|
+| 1 | Dancing beneath the arch | `assets\img\save-the-date-dance.jpg`; `save-the-date-dance-900.jpg` |
+| 2 | Embracing beside the windows | `assets\img\save-the-date-embrace.jpg`; `save-the-date-embrace-640.jpg` |
+| 3 | Hands and engagement ring at the piano | `assets\img\save-the-date-piano.jpg`; `save-the-date-piano-640.jpg` |
+
+The opening introduction reads "Together with our families," followed by
+"we invite you to", then the image-filled SAVE THE DATE headline.
+The first photograph contains "Trisa & Charles", "June 26, 2027",
+"Houston, Texas", and "Share your mailing address".
+
+**The location and address CTA belong on the first photograph only.**
+Moving the CTA to the third photograph was tried and explicitly undone.
+The direct link must remain keyboard accessible.
+
+### Desktop and tablet widths above 600px
+
+The first photograph remains full width and viewport height, using cover
+framing with `object-position: center 35%`. Do not blur it.
+
+The second and third photographs span the full page width at their natural
+aspect ratios. They are not forced into a viewport-height box, and there are
+no cream side margins from `object-fit: contain`.
+
+Tall photographs first scroll until their bottom edge reaches the viewport
+bottom, then pin while the next panel rises over them. The implementation uses
+`min(0, window.innerHeight - section.offsetHeight)` for the sticky top offset,
+refreshed on resize and image/container size changes. Every photograph's bottom
+must remain reachable; there must be no stretched images or inaccessible crop.
+
+"Full photograph" means the actual supplied image frame. The embrace source
+already has tight framing near the heads; CSS cannot recover pixels outside
+the original photograph.
+
+### Mobile widths of 600px and below
+
+Retain the full-bleed, viewport-height photographic panels with cover cropping.
+This intentionally differs from desktop's natural-height gallery.
+Keep the couple, date, location, and CTA readable within the available width.
+The curtain headline stacks SAVE / THE / DATE.
+
+### Layering and form
+
+The hero pins beneath the subsequent photographs. Its names, date, location,
+and CTA scroll upward rather than remaining fixed over later sections.
+Each following photograph rises over the previous panel.
+The solid cream form finally rises over the last image and scrolls normally.
+
+The form is centered at a maximum width of 688px with 24px side padding.
+Fields are one column in their current order. Do not restore the older
+transparent form-over-blurred-photo layout or a venue/directions sidebar.
+
+## 6. Transitions and motion: selected behavior
+
+### Entrance A
+
+This is an automatic curtain reveal, not click-to-enter. Wait for the opening
+photograph and fonts to settle before starting. There is no Replay entrance
+button, A/B switch, or comparison control.
+
+| Transition | Settled behavior |
+|---|---|
+| Introduction | Supporting copy fades/rises in over 0.55s, after a 0.1s delay |
+| Curtain headline | Fades in from 32px left over 0.8s, after a 0.75s delay |
+| Opening photo | Subtle scale settle from 1.07 to 1 over 2.4s |
+| Hero copy | Fades/rises from 24px below over 1s, with a 0.55s delay |
+| Curtain opening | After the hero-copy reveal ends, hold 0.3s, then move the cream halves outward over 0.9s |
+| Curtain title exit | Fade and move upward 12px during the 0.9s opening |
+| Form text | Fade/rise from 8px below over 0.5s; introduction/status have a 0.1s stagger |
+| Button hover | Existing 0.18s background/text-color transition |
+
+Curtain movement uses `cubic-bezier(.76, 0, .24, 1)`. The photo/headline/copy
+reveals use `cubic-bezier(.2, .65, .25, 1)` where specified in the stylesheet.
+These are subtle presentation transitions, not a camera-zoom interaction.
+
+### Scrolling and text reveals
+
+Use the stacked-panel idea from `https://kokoro.framer.website/`, not its
+branding or assets. Normal document scrolling must remain available: no
+wheel interception, scroll lock, miniature-card zoom, or mandatory replay.
+
+Reveal form headings, introduction, field labels, button, and setup status
+as they enter view. Inputs stay visible and stationary. Reveal text once per
+entrance run, not repeatedly on scroll. Keyboard focus must reveal the
+corresponding label even if its scroll trigger has not fired.
+
+### Reduced motion and direct entry
+
+With `prefers-reduced-motion: reduce`, skip the animated curtain, disable
+animation/transitions, reveal copy immediately, and use non-smooth anchor
+scrolling. The current CSS sticky layering remains; do not describe it as a
+separate fully unpinned layout.
+
+Opening `/save-the-date/#address` bypasses the curtain and immediately positions
+the mailing form. Neither direct entry nor reduced motion may leave hidden
+copy, an invisible focus target, or an overlay blocking input.
+
+## 7. Mailing form and truthful submission states
+
+Heading: "Mailing Address". Introduction: "Formal invitation to follow".
+
+Required visible fields, in order: Name, Email, Street address, City,
+State / Province, ZIP / Postal code, Country. The optional Apt / Unit field
+appears after Street address. Country defaults to United States.
+Keep associated labels, autocomplete hints, native validation, the hidden
+`form=address` value, and the honeypot. Do not add phone/guest/note fields
+just because the backend has compatibility columns.
+
+| State | Required behavior |
+|---|---|
+| Backend not configured | Button disabled; show "Address collection is being set up. Please check back soon." No request or success claim |
+| Ready | Button says "Send my address"; purple by default, green on hover |
+| Sending | Button disabled and says "Sending..."; do not create duplicate submissions |
+| Confirmed save | Button says "Sent!", remains visible and disabled, and the thank-you message appears |
+| Failure | Restore the send label and enabled button, show the error, and preserve the entered information for retry |
+
+The sending label uses the existing typographic ellipsis in the interface.
+Success requires both HTTP success and exact JSON `ok: true`.
+Do not hide the address form or force a scroll away from its Sent! button.
+Repeated submits while sending or after success must not create another request.
+The changing button label has a polite live-region announcement.
+
+Thank-you copy:
+
+> We have your address. Watch your mailbox for your invitation.
+
+The error explains that something went wrong and provides the existing contact
+email. Image-load failures also show explicit refresh guidance.
+Do not replace either failure with silent success or clear the guest's data.
+
+## 8. Backend, hosting, and handoff context
+
+### Backend: implemented locally, not activated
+
+`apps-script\Code.gs` contains server validation, safe spreadsheet writes,
+locking, and the idempotent `setupWeddingResponses` function.
+The requested spreadsheet name is
+`trisaandcharleswedding_savethedate_address`, with Addresses and RSVPs tabs.
+`SPREADSHEET_ID` is kept in Script Properties; reruns must preserve existing
+records. The backend validates required values and basic email/postal formats,
+not whether a postal destination or mailbox actually exists.
+
+No live spreadsheet setup, deployed web-app endpoint, or browser-to-sheet save
+has been verified. `script.js` still contains the endpoint placeholder, so the
+real mailing button remains disabled. A synthetic approved end-to-end save is
+required before calling collection live or sharing it as a working guest form.
+Never commit guest addresses, spreadsheet exports, tokens, or credentials.
+
+### Repository and publication
+
+`charlesbneal2/wedding-website` is the single source of truth.
+Use `master`, not a separate `main` branch, and push only to its `origin` remote.
+The user explicitly requested deletion of `trisavo/wedding-website`; that fork
+has been deleted and its local remote removed after verifying the source
+contained the same committed changes. This supersedes the earlier two-repository
+push arrangement. Do not recreate the fork. Verify the original remote head
+after pushing, and never force-push or include unrelated untracked artwork.
+
+GitHub Pages activation on the former private fork was rejected for plan
+eligibility. That result does not establish the original owner's eligibility.
+Verify Pages administration and hosting eligibility for the original repository.
+No plan purchase, repository-visibility change, or separate public repository
+has been authorized. No live website deployment is verified.
+
+The intended release is a curated GitHub Actions Pages artifact, not the whole
+working tree. The workflow is not yet implemented. Exclude backend source,
+tests, documentation, originals, unused experiments, and guest data.
+Root-relative asset URLs currently assume a domain root: an unchanged
+`OWNER.github.io/wedding-website/` preview would need base-path support.
+
+The intended domain is `trisaandcharleswedding.com`. Keep Squarespace
+registration/DNS initially and connect hosting separately. GitHub Pages is not
+a registrar. A registrar transfer is optional and separate from connecting DNS.
+Follow `DEPLOYMENT.md` and `SPEC.md` section 6 for verification, DNS records,
+mail-record preservation, custom domain, and HTTPS. None is established merely
+by the existing CNAME file.
+
+## 9. Decision history: do not reopen by accident
+
+| Decision or experiment | Current disposition |
+|---|---|
+| Curtain entrance A | Selected canonical Save the Date experience |
+| Replay button, split entrance B, comparison pickers | Removed; not part of the guest page |
+| Click-to-enter gate | Superseded by the automatic curtain |
+| Moving the address CTA to photo three | Explicitly undone; keep it on photo one |
+| Desktop contain-fit portraits with cream side margins | Rejected; use full-width natural-height gallery photographs |
+| Mobile viewport-height photographic panels | Retained intentionally |
+| Miniature forms, zoom studies, tilted backing sheets, window frames, fruit cutouts | Discarded; do not reintroduce |
+| Cream masthead, separate framed opening, old blurred-photo form | Archived alternatives, not the current layout |
+| Marcellus form heading beside serif inputs | Replaced by consistent bold Libre Baskerville |
+| Muted berry form text and purple-to-green send button | Selected and retained |
+| Full wedding home page with details, gallery, navigation, and footer | Replaced by the armchair-photo holding page |
+| Full RSVP copy and hidden form | Replaced by the sofa-photo holding page and "RSVP opens soon" |
+| Standalone palette study and its exclusive artwork | Removed; keep selected colors, not the study route |
+| Personal fork and two-repository pushes | Fork deleted; original repository is now the sole source of truth |
+| Kokoro; Cartier, Louis Vuitton, Prada references | Interaction/hierarchy/restraint references only; no copied assets or branding |
+
+## 10. Acceptance: mobile AND desktop are release gates
+
+Any layout, typography, photo, transition, or form change must pass both sides.
+Do not mark a feature accepted after checking only desktop, only mobile,
+only reduced motion, or only an entrance screenshot.
+
+### Viewport matrix
+
+| Viewport | Primary checks |
+|---|---|
+| 320 x 640 | Narrow-phone copy, field readability, button fit, no horizontal overflow |
+| 390 x 844 | Main mobile reference; touch scrolling, stacked title, form and holding pages |
+| 600px and 601px widths | Gallery breakpoint: mobile cover treatment versus natural-height photographs |
+| 768 x 1024 | Tablet layout and tall-image scrolling; no awkward transition between treatments |
+| 1440 x 1000 | Standard desktop reference; typography, centered form, full-width gallery |
+| 1920 x 1080 | Wide desktop; natural photograph framing and reachable photo bottoms |
+
+Repeat the critical Save the Date checks with reduced motion. Also resize or
+rotate after loading; sticky offsets and content must update without a reload.
+At least one real touch-device check is required before a guest launch:
+browser emulation alone is not final device acceptance.
+
+### Shared visual and content acceptance
+
+- [ ] Home contains only its original armchair image and exact requested message.
+- [ ] RSVP contains only its sofa image and "RSVP opens soon", matching home typography.
+- [ ] Holding-page images remain fully visible at natural proportions.
+- [ ] No active page has the removed header/footer content or old study controls.
+- [ ] Fonts, weights, colors, and copy match this document; fallback text remains readable.
+- [ ] No horizontal scrolling, stretched photos, clipped controls, or unreadable button states.
+- [ ] The retired palette route and removed prototype pages are not served.
+
+### Save the Date interaction acceptance
+
+- [ ] Automatic curtain A completes on mobile and desktop; mobile title stacks correctly.
+- [ ] The first photograph contains names/date/location and the only address CTA.
+- [ ] Hero copy scrolls away; later photos cover earlier panels in the correct order.
+- [ ] Both desktop gallery photographs fill the width at natural height; every bottom is reachable.
+- [ ] Mobile retains the approved full-bleed viewport-height gallery treatment.
+- [ ] The cream form appears above the final photo without trapping scroll or focus.
+- [ ] Form headings/labels/input text use Libre Baskerville 700; inputs do not animate.
+- [ ] The direct address link and `#address` entry work without a required entrance or replay.
+- [ ] Reduced motion exposes readable content immediately and does not block the form.
+- [ ] Keyboard focus is visible, field labels reveal on focus, and touch targets are usable.
+- [ ] The mobile keyboard does not leave fields or the submit button behind pinned imagery.
+
+### Submission and launch acceptance
+
+- [ ] An unconfigured backend cannot send data or display Sent!/saved confirmation.
+- [ ] Pending and successful submissions cannot be submitted twice.
+- [ ] Confirmed saves leave a visible disabled Sent! button and show the thank-you message.
+- [ ] Network, HTTP, JSON, or server failures show a retryable error and preserve fields.
+- [ ] An authorized live endpoint saves one approved synthetic submission into the expected sheet.
+- [ ] The original repository push, hosted routes/assets, domain, HTTPS, and mobile/desktop guest flows are verified.
+
+These are release criteria, not claims that all launch work is already complete.
+Visual approval, local mocks, source pushes, and backend unit tests are not proof
+that a live deployment or spreadsheet save works.
+
+## 11. Verification context and implementation map
+
+Prior checks covered the holding pages at 320, 390, and 1440px, plus exact copy,
+original photos, matching typography, and absent headers/footers. Save the Date
+checks covered normal/reduced-motion entrance, direct form entry, font weight,
+purple/green button styles, and responsive gallery transitions, including wide
+desktop photo bottoms. Nine client checks cover submission states and retries;
+15 backend checks cover local validation/setup/storage behavior.
+Retired-study URLs returned 404 while the retained pages and CSS/JS returned 200.
+These records do not substitute for the live acceptance gates above.
+
+| File | Responsibility |
+|---|---|
+| `index.html`, `rsvp\index.html` | Photo-and-message holding pages |
+| `style.css` | Shared tokens, fonts, holding-page styles, and common controls |
+| `save-the-date\index.html` | Canonical curtain markup, three photographs, address form |
+| `save-the-date\save-the-date.css` | Curtain, gallery, cream form, responsive rules, motion |
+| `save-the-date\save-the-date.js` | Entrance lifecycle, hash bypass, reveals, sticky offsets, image errors |
+| `script.js` | Endpoint gate, sending/error/Sent! states, duplicate-submit protection |
+| `apps-script\Code.gs`, `apps-script\Code.test.cjs` | Backend and dependency-free local backend checks |
+| `README.md` | Clone and local-launch instructions |
+| `SPEC.md`, `DEPLOYMENT.md` | Functional/backend reference and deployment/domain rollout |

@@ -2,12 +2,13 @@
 
 Updated October 29, 2026. This is a deployment plan, not a record of publication.
 Detailed configuration and official references are in `SPEC.md`, section 6.
+Current page designs and required mobile/desktop acceptance are in `DESIGNSPEC.md`.
 
 ## Target
 
 | Component | Selected direction |
 |---|---|
-| Repository | Verified private fork: `trisavo/wedding-website`; upstream: `charlesbneal2/wedding-website` |
+| Repository | `charlesbneal2/wedding-website`, the single source of truth; the personal fork was deleted |
 | Website hosting | GitHub Pages, with a curated static artifact published by GitHub Actions |
 | Guest entry | `https://trisaandcharleswedding.com/save-the-date/` |
 | Design | Curtain entrance A, no Replay button, three photos, cream form with berry text |
@@ -17,8 +18,10 @@ Detailed configuration and official references are in `SPEC.md`, section 6.
 
 ## Ordered rollout
 
-1. **Finish the selected site.** Keep `/`, `/save-the-date/`, and `/rsvp/`.
-   Remove superseded save-the-date prototypes. Verify desktop natural-proportion
+1. **Preserve the selected site.** Keep `/`, `/save-the-date/`, and `/rsvp/`.
+   Home and RSVP remain photo-and-message holding pages. Follow `DESIGNSPEC.md`
+   for the curtain Save the Date and require both mobile and desktop acceptance.
+   Verify desktop natural-proportion
    photos, mobile scrolling, keyboard access, reduced motion, and the address link.
 2. **Activate address collection.** Create the named spreadsheet, run
    `setupWeddingResponses`, authorize Apps Script, and deploy its web app as the
@@ -26,18 +29,17 @@ Detailed configuration and official references are in `SPEC.md`, section 6.
    Verify one approved synthetic browser submission reaches `Addresses` and that
    validation/write failures preserve the form. Until then, the button stays
    disabled; local tests alone are not proof that submissions are saved.
-3. **Prepare the fork's Pages release.** GitHub CLI is authorized as `trisavo`;
-   the fork and its upstream parent are verified. Push only to that fork.
-   GitHub rejected Pages activation with "Your current plan does not support
-   GitHub Pages for this repository." The private fork cannot independently
-   become public. Resolve eligibility through an approved plan change, or obtain
-   explicit approval for a separate public deployment repository. Do not change
-   visibility or purchase a plan implicitly. Once eligible, add a manually
+3. **Prepare the original repository's Pages release.** Push only to `master`
+   on `origin`, `charlesbneal2/wedding-website`. Verify Pages administration and
+   plan eligibility with that repository's owner. The deleted fork's rejected
+   Pages activation does not establish eligibility for the original.
+   Do not recreate the fork, change visibility, or purchase a plan implicitly.
+   Once eligible, add a manually
    triggered GitHub Actions Pages workflow for `master`, packaging only the three
    public pages, their CSS/JS, favicon, and referenced optimized images. Exclude
    backend source/tests, documentation, originals, and response
-   exports. The local sample PR was opened before pushing; the requested fork,
-   push, and publication are authorized. Website publication remains blocked.
+   exports. Website publication remains pending repository-owner setup and
+   the launch requirements below.
 4. **Verify the domain before switching traffic.** Keep a copy of the current
    Squarespace DNS settings. In the repository owner's GitHub account settings,
    verify the domain with GitHub's supplied TXT record. Configure the repository
