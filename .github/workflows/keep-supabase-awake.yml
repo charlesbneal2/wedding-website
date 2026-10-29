@@ -1,0 +1,26 @@
+name: Keep Supabase awake
+
+# Free Supabase projects pause after about a week without activity.
+on:
+  schedule:
+    - cron: '17 12 */2 * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: script.js
+          sparse-checkout-cone-mode: false
+      # The public key can't read rows, so a healthy database answers 401 with
+      # Postgres error 42501. A paused project answers with something else.
+      - run: |
+          url=$(grep -oP "SUPABASE_URL = '\K[^']+" script.js)
+          key=$(grep -oP "SUPABASE_PUBLISHABLE_KEY = '\K[^']+" script.js)
+          body=$(curl -sS --max-time 30 "$url/rest/v1/addresses?select=id&limit=1" -H "apikey: $key")
+          echo "$body"
+          echo "$body" | grep -q 42501
