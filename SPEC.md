@@ -302,8 +302,8 @@ been made.
    Verify administrator access and Pages eligibility for the original owner. GitHub Free
    supports Pages from public repositories; eligible paid plans can support
    private repositories. Do not change visibility or purchase a plan implicitly.
-2. Prepare a GitHub Actions Pages workflow targeting `master`, initially using
-   manual dispatch. Set repository **Settings → Pages → Source → GitHub Actions**.
+2. The GitHub Actions Pages workflow is `.github/workflows/pages.yml`; it runs on
+   every push to `master` and on manual dispatch. Set repository **Settings → Pages → Source → GitHub Actions**.
    No framework or package build is needed.
 3. Package only `/`, `/save-the-date/`, `/rsvp/`, their required CSS/JavaScript,
    favicon, and referenced optimized images. Exclude `supabase/`, tests,
