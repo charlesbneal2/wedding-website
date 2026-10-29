@@ -198,7 +198,9 @@ The first photograph contains "Trisa & Charles", "Saturday, June 26, 2027",
 
 The date stays visible on the first photograph after the original SAVE THE DATE
 entrance. On mobile, show two top-centered lines below the names: "Saturday,"
-then "June 26, 2027". Keep Marcellus and restore the previous deployment's
+then "June 26, 2027". Add 24px to the mobile date's top spacing to place it
+lower inside the photograph's arch; leave the names and desktop position unchanged.
+Keep Marcellus and restore the previous deployment's
 calmer date scale: 8cqw, with a 28px minimum and 88px maximum, rather than
 near-edge-to-edge lettering. On desktop, keep the full date on one line. Cap the font
 size by available height so the date stays above Charles's head without
