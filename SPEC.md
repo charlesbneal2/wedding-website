@@ -218,7 +218,8 @@ Kim Son typically serves a set banquet menu, so a meal-choice field is left out.
 2. On submit, `fetch` a JSON `POST` to `{SUPABASE_URL}/rest/v1/{table}` with the `apikey` header and `Prefer: return=minimal`. Success is HTTP `201`; anything else is a failure. A filled honeypot skips the request and shows success.
 3. Disable the button and show "Sending…" while the request runs, which prevents double submits.
 4. On success, replace the form with the thank-you message.
-5. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
+5. **Address autocomplete (save-the-date only).** Typing in Street address suggests addresses from the Google Places API (New). Picking one fills street, unit, city, state, ZIP and country; every field stays editable and failures are silent, so typing by hand always works. The Google key in `script.js` is public by design, so it must stay restricted in Google Cloud Console to HTTP referrers (`trisaandcharleswedding.com/*`, `www.…/*`, `localhost:8000/*` for testing) and to Places API (New) only, with a daily quota cap and a billing budget alert.
+6. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
 
 ### 4.4 Backend: Supabase (`supabase/schema.sql`)
 

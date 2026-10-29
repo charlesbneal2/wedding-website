@@ -113,3 +113,107 @@ if (rsvp) {
     party.required = yes;
   });
 }
+
+// Street-address autocomplete (Google Places API New). The key is public by
+// design: it is restricted to this site's referrers and to the Places API.
+// Failures are silent; guests can always type the address by hand.
+const PLACES_API_KEY = 'AIzaSyC5nkQ34e-0lBW90y-JlG6o5GYn9sWHRJ4';
+const placesStreet = document.querySelector('#address1');
+if (placesStreet && PLACES_API_KEY) {
+  const PLACES = 'https://places.googleapis.com/v1';
+  const list = document.createElement('ul');
+  list.id = 'address1-suggestions';
+  list.className = 'suggestions';
+  list.role = 'listbox';
+  list.hidden = true;
+  placesStreet.after(list);
+  placesStreet.parentElement.classList.add('has-suggestions');
+  Object.entries({ role: 'combobox', 'aria-autocomplete': 'list', 'aria-expanded': 'false',
+    'aria-controls': list.id, autocomplete: 'off' }).forEach(([k, v]) => placesStreet.setAttribute(k, v));
+
+  let session = crypto.randomUUID();
+  let timer;
+  let latest = 0;
+  let active = -1;
+  let items = [];
+
+  const close = () => {
+    list.hidden = true;
+    placesStreet.setAttribute('aria-expanded', 'false');
+    placesStreet.removeAttribute('aria-activedescendant');
+    active = -1;
+  };
+  const highlight = index => {
+    active = index;
+    items.forEach((li, i) => li.setAttribute('aria-selected', String(i === index)));
+    if (index >= 0) placesStreet.setAttribute('aria-activedescendant', items[index].id);
+    else placesStreet.removeAttribute('aria-activedescendant');
+  };
+  const setValue = (id, value) => { document.querySelector(id).value = value; };
+
+  async function choose(placeId) {
+    close();
+    try {
+      const res = await fetch(`${PLACES}/places/${placeId}?sessionToken=${session}`, {
+        headers: { 'X-Goog-Api-Key': PLACES_API_KEY, 'X-Goog-FieldMask': 'addressComponents' },
+      });
+      if (!res.ok) return;
+      const components = (await res.json()).addressComponents || [];
+      const part = (type, short) => {
+        const c = components.find(c => c.types.includes(type));
+        return c ? (short ? c.shortText : c.longText) : '';
+      };
+      const country = part('country');
+      const us = country === 'United States';
+      setValue('#address1', [part('street_number'), part('route')].filter(Boolean).join(' ') || placesStreet.value);
+      setValue('#address2', part('subpremise'));
+      setValue('#city', part('locality') || part('postal_town') || part('sublocality_level_1') || part('administrative_area_level_2'));
+      setValue('#state', part('administrative_area_level_1', us));
+      setValue('#zip', part('postal_code'));
+      setValue('#country', country);
+    } catch {} finally {
+      session = crypto.randomUUID(); // a selection ends the billing session
+    }
+  }
+
+  async function suggest() {
+    const input = placesStreet.value.trim();
+    const mine = ++latest;
+    if (input.length < 3) return close();
+    try {
+      const res = await fetch(`${PLACES}/places:autocomplete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': PLACES_API_KEY },
+        body: JSON.stringify({ input, sessionToken: session, includedPrimaryTypes: ['street_address', 'premise', 'subpremise'] }),
+      });
+      if (!res.ok || mine !== latest) return;
+      const predictions = ((await res.json()).suggestions || []).map(s => s.placePrediction).filter(Boolean);
+      list.replaceChildren(...predictions.map((p, i) => {
+        const li = document.createElement('li');
+        li.id = `address1-option-${i}`;
+        li.role = 'option';
+        li.textContent = p.text.text;
+        // mousedown fires before the input's blur closes the list
+        li.addEventListener('mousedown', e => { e.preventDefault(); choose(p.placeId); });
+        return li;
+      }));
+      items = [...list.children];
+      active = -1;
+      list.hidden = !items.length;
+      placesStreet.setAttribute('aria-expanded', String(items.length > 0));
+    } catch {}
+  }
+
+  placesStreet.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(suggest, 250); });
+  placesStreet.addEventListener('blur', close);
+  placesStreet.addEventListener('keydown', e => {
+    if (list.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); highlight((active + 1) % items.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); highlight((active - 1 + items.length) % items.length); }
+    else if (e.key === 'Escape') close();
+    else if (e.key === 'Enter' && active >= 0) {
+      e.preventDefault(); // don't submit the form
+      items[active].dispatchEvent(new MouseEvent('mousedown'));
+    }
+  });
+}

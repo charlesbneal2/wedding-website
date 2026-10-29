@@ -191,3 +191,8 @@
   .entrance-page *, .entrance-page *::before, .entrance-page *::after { animation: none !important; transition: none !important; }
   .js .entrance-photo-copy, .form-text-reveal { opacity: 1; transform: none; }
 }
+
+.field.has-suggestions { position: relative; }
+.suggestions { position: absolute; z-index: 5; left: 0; right: 0; margin: 0; padding: 0; list-style: none; border: 1px solid rgb(87 34 59 / 28%); border-top: 0; background: var(--form-paper); color: var(--berry); box-shadow: 0 8px 18px rgb(87 34 59 / 14%); }
+.suggestions li { padding: .6rem .75rem; font-size: .9rem; font-weight: 700; cursor: pointer; }
+.suggestions li:hover, .suggestions li[aria-selected="true"] { background: var(--berry); color: var(--form-paper); }
