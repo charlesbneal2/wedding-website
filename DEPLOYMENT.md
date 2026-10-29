@@ -12,8 +12,8 @@ Current page designs and required mobile/desktop acceptance are in `DESIGNSPEC.m
 | Website hosting | GitHub Pages, with a curated static artifact published by GitHub Actions |
 | Guest entry | `https://trisaandcharleswedding.com/save-the-date/` |
 | Design | Curtain entrance A, no Replay button, three photos, cream form with berry text |
-| Backend | Google Apps Script writing to a private Google spreadsheet |
-| Spreadsheet | `trisaandcharleswedding_savethedate_address` |
+| Backend | Supabase (Postgres), insert-only for the public site |
+| Table | `addresses` (`supabase/schema.sql`) |
 | Domain | Keep Squarespace registration and DNS initially; connect the domain to Pages |
 
 ## Ordered rollout
@@ -23,12 +23,10 @@ Current page designs and required mobile/desktop acceptance are in `DESIGNSPEC.m
    for the curtain Save the Date and require both mobile and desktop acceptance.
    Verify desktop natural-proportion
    photos, mobile scrolling, keyboard access, reduced motion, and the address link.
-2. **Activate address collection.** Create the named spreadsheet, run
-   `setupWeddingResponses`, authorize Apps Script, and deploy its web app as the
-   owner with access for Anyone. Configure the `/exec` URL in `script.js`.
-   Verify one approved synthetic browser submission reaches `Addresses` and that
-   validation/write failures preserve the form. Until then, the button stays
-   disabled; local tests alone are not proof that submissions are saved.
+2. **Activate address collection.** Run `supabase/schema.sql` in the
+   Supabase SQL Editor. `script.js` already holds the project URL and publishable key.
+   Verify one approved synthetic browser submission reaches the `addresses` table
+   and that failures preserve the form. Delete the synthetic row afterward.
 3. **Prepare the original repository's Pages release.** Push only to `master`
    on `origin`, `charlesbneal2/wedding-website`. Verify Pages administration and
    plan eligibility with that repository's owner. The deleted fork's rejected
@@ -37,7 +35,7 @@ Current page designs and required mobile/desktop acceptance are in `DESIGNSPEC.m
    Once eligible, add a manually
    triggered GitHub Actions Pages workflow for `master`, packaging only the three
    public pages, their CSS/JS, favicon, and referenced optimized images. Exclude
-   backend source/tests, documentation, originals, and response
+   `supabase/`, documentation, originals, and response
    exports. Website publication remains pending repository-owner setup and
    the launch requirements below.
 4. **Verify the domain before switching traffic.** Keep a copy of the current
@@ -49,7 +47,7 @@ Current page designs and required mobile/desktop acceptance are in `DESIGNSPEC.m
    unrelated DNS records. Keep registration/nameservers at Squarespace.
 6. **Launch and verify.** Publish the approved artifact, confirm DNS and certificate
    provisioning, enable Enforce HTTPS, and check apex/`www`, all public routes,
-   photos, and a real browser-to-sheet round trip. Test on cellular data as well
+   photos, and a real browser-to-database round trip. Test on cellular data as well
    as Wi-Fi. Only then share the save-the-date link with guests.
 
 The site currently uses root-relative asset URLs. An unchanged project preview
@@ -72,12 +70,10 @@ to Pages while waiting. Do not cancel the domain registration.
 
 Keep the last working Pages artifact and the pre-change web DNS values. If a
 release fails, redeploy that artifact; if the host cutover fails, restore only the
-previous web-routing records. Keep the spreadsheet and stable Apps Script
-deployment URL unchanged so saved addresses are not affected.
+previous web-routing records. Keep the Supabase project and its URL unchanged so saved addresses are not affected.
 
 ## Remaining activation work
 
-Pages eligibility, the Pages workflow, Google authorization, spreadsheet
-creation/configuration, an actual `/exec` deployment, and
+Pages eligibility, the Pages workflow, Supabase table creation, and
 Squarespace DNS/HTTPS changes are not established by this document. No GitHub
 website deployment, registrar transfer, or DNS change was performed while writing it.

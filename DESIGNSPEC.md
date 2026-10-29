@@ -232,7 +232,7 @@ just because the backend has compatibility columns.
 | Failure | Restore the send label and enabled button, show the error, and preserve the entered information for retry |
 
 The sending label uses the existing typographic ellipsis in the interface.
-Success requires both HTTP success and exact JSON `ok: true`.
+Success requires HTTP 201 from Supabase.
 Do not hide the address form or force a scroll away from its Sent! button.
 Repeated submits while sending or after success must not create another request.
 The changing button label has a polite live-region announcement.
@@ -247,20 +247,16 @@ Do not replace either failure with silent success or clear the guest's data.
 
 ## 8. Backend, hosting, and handoff context
 
-### Backend: implemented locally, not activated
+### Backend: Supabase
 
-`apps-script\Code.gs` contains server validation, safe spreadsheet writes,
-locking, and the idempotent `setupWeddingResponses` function.
-The requested spreadsheet name is
-`trisaandcharleswedding_savethedate_address`, with Addresses and RSVPs tabs.
-`SPREADSHEET_ID` is kept in Script Properties; reruns must preserve existing
-records. The backend validates required values and basic email/postal formats,
-not whether a postal destination or mailbox actually exists.
+`supabase\schema.sql` creates the `addresses` table with not-null, length,
+email-format and US-ZIP constraints, and row-level security that lets the public
+(publishable) key only INSERT. `script.js` POSTs JSON to Supabase REST and treats
+HTTP 201 as the only success. The constraints check format, not whether a postal
+destination or mailbox actually exists.
 
-No live spreadsheet setup, deployed web-app endpoint, or browser-to-sheet save
-has been verified. `script.js` still contains the endpoint placeholder, so the
-real mailing button remains disabled. A synthetic approved end-to-end save is
-required before calling collection live or sharing it as a working guest form.
+Verify an approved synthetic browser save reaches the table before calling
+collection live or sharing it as a working guest form.
 Never commit guest addresses, spreadsheet exports, tokens, or credentials.
 
 ### Repository and publication
@@ -363,13 +359,13 @@ browser emulation alone is not final device acceptance.
 - [ ] An unconfigured backend cannot send data or display Sent!/saved confirmation.
 - [ ] Pending and successful submissions cannot be submitted twice.
 - [ ] Confirmed saves leave a visible disabled Sent! button and show the thank-you message.
-- [ ] Network, HTTP, JSON, or server failures show a retryable error and preserve fields.
-- [ ] An authorized live endpoint saves one approved synthetic submission into the expected sheet.
+- [ ] Network, HTTP, or database failures show a retryable error and preserve fields.
+- [ ] An authorized live endpoint saves one approved synthetic submission into the `addresses` table.
 - [ ] The original repository push, hosted routes/assets, domain, HTTPS, and mobile/desktop guest flows are verified.
 
 These are release criteria, not claims that all launch work is already complete.
-Visual approval, local mocks, source pushes, and backend unit tests are not proof
-that a live deployment or spreadsheet save works.
+Visual approval, local mocks, and source pushes are not proof
+that a live deployment or database save works.
 
 ## 11. Verification context and implementation map
 
@@ -377,8 +373,7 @@ Prior checks covered the holding pages at 320, 390, and 1440px, plus exact copy,
 original photos, matching typography, and absent headers/footers. Save the Date
 checks covered normal/reduced-motion entrance, direct form entry, font weight,
 purple/green button styles, and responsive gallery transitions, including wide
-desktop photo bottoms. Nine client checks cover submission states and retries;
-15 backend checks cover local validation/setup/storage behavior.
+desktop photo bottoms. Nine client checks cover submission states and retries.
 Retired-study URLs returned 404 while the retained pages and CSS/JS returned 200.
 These records do not substitute for the live acceptance gates above.
 
@@ -389,7 +384,7 @@ These records do not substitute for the live acceptance gates above.
 | `save-the-date\index.html` | Canonical curtain markup, three photographs, address form |
 | `save-the-date\save-the-date.css` | Curtain, gallery, cream form, responsive rules, motion |
 | `save-the-date\save-the-date.js` | Entrance lifecycle, hash bypass, reveals, sticky offsets, image errors |
-| `script.js` | Endpoint gate, sending/error/Sent! states, duplicate-submit protection |
-| `apps-script\Code.gs`, `apps-script\Code.test.cjs` | Backend and dependency-free local backend checks |
+| `script.js` | Supabase insert, config gate, sending/error/Sent! states, duplicate-submit protection |
+| `supabase\schema.sql` | Table, constraints, insert-only row-level security |
 | `README.md` | Clone and local-launch instructions |
 | `SPEC.md`, `DEPLOYMENT.md` | Functional/backend reference and deployment/domain rollout |

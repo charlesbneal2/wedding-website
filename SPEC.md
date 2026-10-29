@@ -46,25 +46,24 @@ Out of scope: guest logins, a photo lightbox library, a CMS.
         ▼
  trisaandcharleswedding.com ──► GitHub Pages (static HTML/CSS/JS, free, HTTPS)
         │
-        │  form submit (fetch POST)
+        │  form submit (fetch POST, publishable key)
         ▼
- Google Apps Script web app ──► Google Sheet: tabs "Addresses" and "RSVPs"
-        │
-        └─► (optional) email notification to the couple
+ Supabase REST API ──► Postgres tables (insert-only for the public)
 ```
 
 | Concern | Choice | Why |
 |---|---|---|
 | Site | Plain HTML + CSS + about 40 lines of JS. No framework, no build step | One page, rare edits, nothing to upgrade or break before 2027 |
 | Hosting | GitHub Pages, curated GitHub Actions release | Static hosting, HTTPS and custom domain; publish only approved site files |
-| Form backend | Google Apps Script → Google Sheet | Free, no server to run, both of you can see and edit the data, exports to CSV for the stationer or labels |
+| Form backend | Supabase (Postgres + REST), called from the browser | Free tier, no server to run, a real database with a Table Editor both of you can use, CSV export for the stationer or labels |
 | DNS | Your current registrar, pointed at GitHub Pages | No domain transfer needed |
 
 ### Alternatives considered
 
 - **Google Form embed.** No code, but it looks generic and would clash with the invitation styling. Keep it as an emergency fallback.
 - **Formspree, Basin or Netlify Forms.** Free tiers cap submissions (often 50 a month), and the data sits in a vendor dashboard instead of a spreadsheet.
-- **Cloudflare Pages + D1, or Supabase.** A real database, but more code and you'd have to build an admin view. Overkill for about 150 households.
+- **Google Sheet + Apps Script.** Used first, then replaced: a database was preferred over a spreadsheet for storing responses.
+- **Cloudflare Pages + D1.** A real database, but you'd build the admin view yourself. Supabase includes one.
 - **Zola, The Knot or Joy.** Polished and free, but you can't match the invitation design, the apex domain doesn't work cleanly, and the vendor holds your data.
 
 ## 3. Visual Design: Matching the Invitation
@@ -175,7 +174,7 @@ The originals are 2.6–8.3 MB each (35 MB total). Never serve them directly: on
 
 ## 4. Forms
 
-The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both forms post to the same Apps Script URL. A hidden `form` field (`address` or `rsvp`) picks which tab of the sheet the row goes to.
+The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both forms use the same `script.js`. A hidden `form` field (`address` or `rsvp`) picks the Supabase table via `TABLES`. Only `address` is wired up so far.
 
 ### 4.1 Save-the-date (address) form: phase 1
 
@@ -211,53 +210,38 @@ Success message: *"Thank you! Watch your mailbox for the invitation. 💌"*
 
 Kim Son typically serves a set banquet menu, so a meal-choice field is left out. Add one only if the restaurant asks for counts per entrée.
 
-**Known ceiling:** anyone can RSVP with any party size, because there's no guest-list lookup. Reconcile against your invite list in the sheet (§6). Add name lookup only if uninvited +1s become a real problem.
+**Known ceiling:** anyone can RSVP with any party size, because there's no guest-list lookup. Reconcile against your invite list in the database (§6). Add name lookup only if uninvited +1s become a real problem.
 
 ### 4.3 Front-end behavior (shared `script.js`)
 
 1. Use native HTML validation (`required`, `type="email"`, `min`/`max`). No validation library.
-2. On submit, call `fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(form) })`. A FormData request is a "simple" request, so there's no CORS preflight.
+2. On submit, `fetch` a JSON `POST` to `{SUPABASE_URL}/rest/v1/{table}` with the `apikey` header and `Prefer: return=minimal`. Success is HTTP `201`; anything else is a failure. A filled honeypot skips the request and shows success.
 3. Disable the button and show "Sending…" while the request runs, which prevents double submits.
 4. On success, replace the form with the thank-you message.
 5. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
 
-### 4.4 Backend: `apps-script/Code.gs`
+### 4.4 Backend: Supabase (`supabase/schema.sql`)
 
-```js
-const TABS = {
-  address: ['name','email','phone','address1','address2','city','state','zip','country','guests','note'],
-  rsvp:    ['name','email','attending','party','guestNames','dietary','note'],
-};
+The browser POSTs JSON straight to Supabase's REST API
+(`{SUPABASE_URL}/rest/v1/addresses`) with the **publishable** key. There is no
+server code. The database enforces everything:
 
-function doPost(e) {
-  const p = e.parameter;
-  if (p.website) return json({ ok: true });            // honeypot: bots fill the hidden field
-  const fields = TABS[p.form];
-  if (!fields || !p.name) return json({ ok: false, error: 'bad request' });
+- `addresses` table: `id`, `created_at`, `name`, `email`, `address1`, `address2`,
+  `city`, `state`, `zip`, `country`. Required fields are `not null` with length
+  `check`s, email gets a basic format check, and a US ZIP must be 5 digits or ZIP+4.
+- Row-level security is on. The `anon` role (the publishable key) may only
+  `INSERT`. It cannot read, update or delete, so a visitor who copies the key
+  from `script.js` still cannot see anyone's address.
+- Phone, guest count and note are not collected (see `DESIGNSPEC.md` §7).
+- RSVPs get their own table later; `TABLES` in `script.js` maps form name to table.
 
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);                                 // avoid row collisions on simultaneous submits
-  try {
-    const sheet = SpreadsheetApp.getActive().getSheetByName(p.form === 'rsvp' ? 'RSVPs' : 'Addresses');
-    sheet.appendRow([new Date(), ...fields.map(f => String(p[f] || '').slice(0, 500))]);
-  } finally {
-    lock.releaseLock();
-  }
-  // Optional: MailApp.sendEmail('you@example.com', `New ${p.form}: ${p.name}`, JSON.stringify(p, null, 2));
-  return json({ ok: true });
-}
-
-function json(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-The form `name` attributes must match the `TABS` arrays exactly.
+The **secret** key (in the untracked `.env`) bypasses RLS. Use it only from your
+own machine for admin scripts. Never put it in `script.js` or commit it.
 
 ### 4.5 Spam and duplicates
 
 - The honeypot stops most bots. Add Cloudflare Turnstile only if spam actually shows up.
-- Expect duplicates (double submits, or both partners filling it in). Dedupe by hand in the sheet before exporting.
+- Expect duplicates (double submits, or both partners filling it in). Dedupe by hand in the Table Editor before exporting.
 
 ## 5. Repo Layout
 
@@ -271,7 +255,7 @@ CNAME                     # contains: trisaandcharleswedding.com
 assets/
   img/                    # web-sized photos (committed)
   engagement/             # full-size originals (gitignored)
-apps-script/Code.gs       # copy of the backend, for version control only
+supabase/schema.sql       # database schema; run once in the Supabase SQL Editor
 SPEC.md
 ```
 
@@ -286,24 +270,18 @@ The `:Zone.Identifier` files are Windows download markers created when files are
 
 ## 6. Setup and Deployment
 
-### 6.1 Google Sheet and Apps Script (once)
+### 6.1 Supabase (once)
 
-1. Use a Google Sheet named **trisaandcharleswedding_savethedate_address** with two tabs:
-   - `Addresses`, with headers: `Timestamp, Name, Email, Phone, Address 1, Address 2, City, State, ZIP, Country, Guests, Note`
-   - `RSVPs`, with headers: `Timestamp, Name, Email, Attending, Party, Guest Names, Dietary, Note`
-2. Paste the current `apps-script/Code.gs` into Apps Script. Run
-   `setupWeddingResponses` and authorize it. It creates the named spreadsheet
-   once, stores `SPREADSHEET_ID` in Script Properties, and configures the headers.
-   To reuse a manually created spreadsheet, first set its ID as `SPREADSHEET_ID`
-   in Project Settings → Script Properties. Reruns preserve rows and reject
-   mismatched headers rather than overwriting them.
-3. Choose **Deploy → New deployment → Web app**. Set Execute as **Me** and Who has access to **Anyone**.
-4. Authorize it, then copy the `/exec` URL into `APPS_SCRIPT_URL` in `script.js`.
-5. Keep the spreadsheet private; share it only with the intended editors.
-   Verify an approved synthetic browser submission actually appears in
-   `Addresses` before enabling a guest launch. The selected site's submit button
-   remains disabled until a real `/exec` URL is configured.
-6. To update the script later, use **Deploy → Manage deployments → Edit → New version**. This keeps the same URL. Making a "New deployment" creates a new URL and breaks the forms.
+1. In the Supabase dashboard open **SQL Editor → New query**, paste
+   `supabase/schema.sql`, and **Run**. It is safe to rerun and never deletes rows.
+2. Copy **Project URL** and the **publishable** key (Settings → API Keys) into
+   `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` at the top of `script.js`. Both
+   are public by design. Keep the **secret** key only in `.env` (gitignored).
+3. Submit one synthetic address from the live page and confirm it appears in
+   **Table Editor → addresses** before sharing the link with guests.
+4. View/export: Table Editor → addresses → **Export → CSV**.
+5. Optional: Supabase free projects pause after about a week of inactivity.
+   Sharing the link or opening the dashboard keeps it awake; check it before launch.
 
 ### 6.2 GitHub Pages release plan
 
@@ -327,7 +305,7 @@ been made.
    manual dispatch. Set repository **Settings → Pages → Source → GitHub Actions**.
    No framework or package build is needed.
 3. Package only `/`, `/save-the-date/`, `/rsvp/`, their required CSS/JavaScript,
-   favicon, and referenced optimized images. Exclude `apps-script/`, tests,
+   favicon, and referenced optimized images. Exclude `supabase/`, tests,
    docs, original photos, and guest data. Review/commit the
    intended release before pushing; local untracked files are not published
    automatically.
@@ -340,7 +318,7 @@ been made.
    `trisaandcharleswedding.com` before pointing web DNS to Pages.
 6. Publish the approved artifact, apply section 6.3, wait for the domain and
    certificate checks, and enable **Enforce HTTPS**. Verify the canonical
-   save-the-date URL, home, RSVP, assets, and an actual browser-to-sheet save.
+   save-the-date URL, home, RSVP, assets, and an actual browser-to-database save.
 
 The existing `CNAME` documents the intended domain but does not establish that
 Pages, DNS, domain ownership, or HTTPS is configured. Root-relative asset paths
@@ -426,10 +404,10 @@ Instructions and DNS values checked October 29, 2026:
 | Edit without a terminal | Use the github.com web editor and commit to `master` |
 | Open RSVPs (phase 2) | In `rsvp/index.html`, remove `hidden` from `#rsvp-form-wrap` and add `hidden` to the `.notice` div. In `index.html`, point the hero button at `/rsvp/` and change its text to "RSVP". Push |
 | Close save-the-date | In `save-the-date/index.html`, swap the form for "Address collection is closed. Contact us directly." Leave the page up, since old links still point to it |
-| See responses | Open the sheet. Turn on **Tools → Notification settings** for email alerts, or uncomment the `MailApp` line |
-| Track who hasn't responded | Add an `Invitees` tab with your guest list and a column using `=COUNTIF(Addresses!B:B, "*"&A2&"*")>0` (or point it at `RSVPs!B:B`), or check people off by hand |
-| Export addresses | Dedupe, then **File → Download → CSV** for just that tab. Stationers and Avery templates accept CSV |
-| Headcount for Kim Son | `=SUMIF(RSVPs!D:D, "Joyfully accepts", RSVPs!E:E)` after deduping |
+| See responses | Supabase dashboard → Table Editor → `addresses` |
+| Track who hasn't responded | Compare the `addresses` export against your guest list, or check people off by hand |
+| Export addresses | Dedupe, then Table Editor → **Export → CSV**. Stationers and Avery templates accept CSV |
+| Headcount for Kim Son | Once the RSVP table exists: `select sum(party) from rsvps where attending = 'Joyfully accepts'` in the SQL Editor |
 
 ## 8. Timeline
 
@@ -450,7 +428,7 @@ Instructions and DNS values checked October 29, 2026:
 |---|---|
 | Domain | Already owned (Squarespace, expires Sept 28, 2027; turn auto-renew on) |
 | GitHub Pages | $0 |
-| Google Sheet + Apps Script | $0 (quota of about 20k requests a day) |
+| Supabase | $0 (free tier) |
 | **Total** | **$0 a year beyond domain renewal** |
 
 ## 10. Later, Only If Needed

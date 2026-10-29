@@ -1,5 +1,11 @@
-// Paste the Apps Script web app "/exec" URL here (SPEC.md §6.1 step 4).
-const APPS_SCRIPT_URL = 'PASTE_APPS_SCRIPT_URL_HERE';
+// Supabase project URL and publishable key (SPEC.md §6.1). Both are safe to
+// ship in the browser: row-level security lets this key only INSERT addresses.
+// Never put the secret key here.
+const SUPABASE_URL = 'https://bbzhzmtewslqanvovhcn.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oGLRYHaUHs3eHIsOBHZR9A_Eve850Zz';
+// Form name -> table. RSVPs stay disabled until their table exists.
+const TABLES = { address: 'addresses' };
+const ADDRESS_FIELDS = ['name', 'email', 'address1', 'address2', 'city', 'state', 'zip', 'country'];
 
 const addressLink = document.querySelector('.save-date-scroll');
 if (addressLink) {
@@ -46,7 +52,8 @@ document.querySelectorAll('form[data-form]').forEach(form => {
   const error = form.querySelector('.error');
   const thanks = form.parentElement.querySelector('.thanks');
   const backendStatus = form.querySelector('[data-backend-status]');
-  const backendConfigured = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(APPS_SCRIPT_URL);
+  const table = TABLES[form.dataset.form];
+  const backendConfigured = Boolean(table && SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
   btn.disabled = !backendConfigured;
   if (backendStatus) backendStatus.hidden = backendConfigured;
 
@@ -62,9 +69,21 @@ document.querySelectorAll('form[data-form]').forEach(form => {
     btn.textContent = 'Sending…';
     error.hidden = true;
     try {
-      const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(form) });
-      if (!res.ok) throw new Error(`Submission failed (${res.status})`);
-      if ((await res.json()).ok !== true) throw new Error('Submission was not saved');
+      const data = new FormData(form);
+      // Bots fill the hidden honeypot: pretend success, store nothing.
+      if (!data.get('website')) {
+        const row = Object.fromEntries(ADDRESS_FIELDS.map(f => [f, String(data.get(f) ?? '').trim()]));
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify(row),
+        });
+        if (res.status !== 201) throw new Error(`Submission failed (${res.status})`);
+      }
       thanks.hidden = false;
       if (form.dataset.form === 'address') {
         btn.textContent = 'Sent!';

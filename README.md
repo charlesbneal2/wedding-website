@@ -57,12 +57,12 @@ Press **Ctrl+C** in the terminal to stop the server.
   require an HTTP server.
 
 The local server previews the site only. Form submission remains disabled until
-the Google Apps Script backend is configured; see Deployment below.
+the Supabase table exists (`supabase/schema.sql`); see Deployment below.
 
 ## Deployment
 
 `DEPLOYMENT.md` contains the rollout plan; `SPEC.md` section 6 contains the exact
-GitHub Pages, Google Apps Script, Squarespace DNS, and optional registrar-transfer
+GitHub Pages, Supabase, Squarespace DNS, and optional registrar-transfer
 instructions.
 
 `charlesbneal2/wedding-website` is the single source of truth; the personal fork
@@ -73,9 +73,9 @@ verified for this repository and its owner before publication.
 Keep the domain registered with Squarespace initially and point its web DNS to
 Pages. Registration transfer is optional and requires a separate registrar.
 
-The backend code and idempotent spreadsheet setup are in `apps-script/Code.gs`.
-Address collection stays disabled until `script.js` has the actual authorized
-Apps Script `/exec` URL. A live browser-to-sheet save must be verified before
-sharing with guests.
+The database schema is `supabase/schema.sql`; run it once in the Supabase SQL
+Editor. `script.js` holds the project URL and publishable key (public by design).
+Keep the secret key in the gitignored `.env`. A live browser-to-database save
+must be verified before sharing with guests.
 
 No live website deployment, domain transfer, or DNS change has been performed.
