@@ -74,7 +74,7 @@ A complete RSVP interface is future work, not part of this approved release.
 | Home and RSVP messages | Libre Baskerville | 400, 16px, centered; both pages must match |
 | Save the Date curtain headline | Marcellus | 400, uppercase, tight `-.055em` tracking |
 | Couple's names on the first photograph | Pinyon Script | 400; keep the script character |
-| Date on the first photograph | Marcellus | 400, giant white centered marquee; static/wrapped with reduced motion or no JavaScript |
+| Date on the first photograph | Marcellus | 400, white left-aligned stack with a one-time left-to-right fade; one word/number per line, remaining visible afterward |
 | Curtain introduction, Houston location, and photo CTA | Libre Baskerville | 400; supporting copy, not another decorative face |
 | Mailing Address heading and form introduction | Libre Baskerville | 700; uppercase presentation |
 | Form labels and entered input text | Libre Baskerville | 700; consistent with the heading and easier to read |
@@ -119,17 +119,21 @@ footer lace, lotus, or separate credits block.
 ### Separate mangosteen motion preview
 
 The explicitly requested standalone HTML preview uses 24 decorative pixel
-mangosteens, shown as one row of eight at a time for three rows total.
+mangosteens, randomly scattered rather than arranged in rows.
 Seven of the 24 (approximately 30%) use the palette pink-magenta `#b54d66`
 via `assets\mangosteen-pink.svg`; the others reuse `assets\favicon.svg`.
 Keep the current enlarged size (62.4px on mobile, 93.6px on desktop).
-Each row drifts gently downward with side-to-side sway. Only after a row exits
-the bottom does the next enter from above. After the third row, all fruit
-disappears and the animation stops; resizing or changing tab visibility must
-not restart it. Do not use gravity, bouncing, collisions, or an endless loop.
+Start 18 fruit across the top, middle, and bottom of the visible screen so
+an immediate screenshot shows an assortment. Six more enter from above after
+random delays. Run the entire timeline at 1.4x speed (40% faster): delayed
+starts occur after approximately 0.54 to 3.57 seconds, with falling speeds of
+63 to 112 pixels per second. Randomize horizontal positions and sway phases.
+Each fruit falls once, then disappears; stop when
+all 24 have finished. Resizing or changing tab visibility must not restart
+completed fruit. Do not use gravity, bouncing, collisions, or an endless loop.
 Artwork sits behind the form and does not intercept pointer events or obscure
 input text. Pause/Resume is available until completion; reduced motion uses
-one static row without automatic falling.
+scattered static artwork without automatic falling.
 The preview loads neither the submission handler nor Places autocomplete,
 keeps its send button disabled, and prevents form submission.
 This is a new optional experiment, not approval to add fruit to the main page.
@@ -150,13 +154,17 @@ The opening introduction reads "Together with our families," followed by
 The first photograph contains "Trisa & Charles", "Saturday, June 26, 2027",
 "Houston, Texas", and "Share your mailing address".
 
-The date runs horizontally across the center of the first photograph in giant
-Marcellus lettering, between the names and bottom address CTA. Keep the date
-inside the hero: it scrolls away with the other photo copy, not over the form.
-The requested poster-scale treatment uses `clamp(12rem, 30cqw, 36rem)`, capped
-at 45svh (25svh on short screens) so the names and address link remain clear.
-Reuse the date-banner Pause/Play control. Duplicate visual text is hidden from
-assistive technology; a single semantic time element carries the full date.
+The date stays visible on the first photograph after the original SAVE THE DATE
+entrance. Set Saturday, / June / 26, / 2027 on four left-aligned lines at the
+photo copy's responsive left margin. Keep the existing Marcellus font, capped by
+the available width and height so complete words remain readable rather than
+cropped. If necessary on a short screen, let the hero grow instead of overlapping
+the names or address CTA. Keep the date in normal hero flow: it scrolls away
+with the other photo copy, not over the form. There is no date marquee, duplicate
+visual copy, or Pause/Play control; one semantic time element carries the date.
+Fade each line in from left to right once using a soft gradient mask, starting
+after the curtain opens. This is not a handwriting-font change or a hard-edged
+wipe. Keep every line visible after it finishes.
 
 **The location and address CTA belong on the first photograph only.**
 Moving the CTA to the third photograph was tried and explicitly undone.
@@ -187,8 +195,7 @@ Retain the full-bleed, viewport-height photographic panels with cover cropping.
 This intentionally differs from desktop's natural-height gallery.
 Keep the couple, date, location, and CTA readable within the available width.
 The curtain headline stacks SAVE / THE / DATE.
-The moving date may extend beyond the photo's edges, but must be clipped inside
-its banner rather than cause horizontal page scrolling.
+The stacked date must remain fully readable without horizontal page scrolling.
 
 ### Layering and form
 
@@ -217,9 +224,9 @@ button, A/B switch, or comparison control.
 | Hero copy | Fades/rises from 24px below over 1s, with a 0.55s delay |
 | Curtain opening | After the hero-copy reveal ends, hold 0.3s, then move the cream halves outward over 0.9s |
 | Curtain title exit | Fade and move upward 12px during the 0.9s opening |
+| Date fade | Soft left-to-right line fades starting at 2.8s; Saturday 0.9s, June 0.7s, 26 0.6s, 2027 0.8s; all remain visible |
 | Form text | Fade/rise from 8px below over 0.5s; introduction/status have a 0.1s stagger |
 | Button hover | Existing 0.18s background/text-color transition |
-| Centered date marquee | Seamless 26s linear horizontal loop; Pause/Play stops and resumes it |
 
 Curtain movement uses `cubic-bezier(.76, 0, .24, 1)`. The photo/headline/copy
 reveals use `cubic-bezier(.2, .65, .25, 1)` where specified in the stylesheet.
@@ -242,8 +249,8 @@ With `prefers-reduced-motion: reduce`, skip the animated curtain, disable
 animation/transitions, reveal copy immediately, and use non-smooth anchor
 scrolling. The current CSS sticky layering remains; do not describe it as a
 separate fully unpinned layout.
-The date marquee becomes one static, wrapping copy of the complete date,
-with no pause control. Use the same readable static treatment without JavaScript.
+The date remains the same static, readable four-line stack with reduced motion
+or without JavaScript.
 
 Opening `/save-the-date/#address` bypasses the curtain and immediately positions
 the mailing form. Neither direct entry nor reduced motion may leave hidden
@@ -380,8 +387,8 @@ browser emulation alone is not final device acceptance.
 
 - [ ] Automatic curtain A completes on mobile and desktop; mobile title stacks correctly.
 - [ ] The first photograph contains names/date/location and the only address CTA.
-- [ ] The giant centered date scrolls horizontally, pauses/resumes, and cannot overflow the page.
-- [ ] Reduced motion and no JavaScript show the complete date statically without duplicate visible copies.
+- [ ] The large date stays visible after the entrance, left-aligned with one word/number per line.
+- [ ] The complete date remains readable with reduced motion and no JavaScript, with no overflow or overlapping copy.
 - [ ] Hero copy scrolls away; later photos cover earlier panels in the correct order.
 - [ ] Both desktop gallery photographs fill the width at natural height; every bottom is reachable.
 - [ ] Mobile retains the approved full-bleed viewport-height gallery treatment.

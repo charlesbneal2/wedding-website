@@ -65,38 +65,28 @@
 }
 
 .entrance-date {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  transform: translateY(-50%);
+  display: block;
+  width: 100%;
+  margin: auto 0;
+  padding: clamp(1.5rem, 5svh, 3rem) 0;
   color: inherit;
-  font: 400 clamp(2rem, 7cqw, 6rem)/1.1 var(--font-editorial);
+  font: 400 clamp(2rem, min(20cqw, 17svh), 16.5rem)/.95 var(--font-editorial);
   letter-spacing: -.055em;
-  white-space: normal;
+  text-align: left;
 }
-.entrance-date .wedding-banner-track { display: block; width: 100%; animation: none; }
-.entrance-date .wedding-banner-group { display: block; min-width: 0; padding: 0 1.25rem; white-space: normal; }
-.entrance-date .wedding-banner-group + .wedding-banner-group { display: none; }
-.entrance-date .banner-toggle {
-  right: 50%;
-  bottom: .25rem;
-  transform: translateX(50%);
-  border-color: rgb(255 255 255 / 60%);
-  background: rgb(24 30 20 / 35%);
-  color: #fff;
+.entrance-date span { display: block; width: fit-content; max-width: 100%; padding-right: .1em; }
+.js .is-ready .entrance-date span {
+  -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+  mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+  animation: date-fade .9s 2.8s linear both;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .js .entrance-date { padding: 2rem 0; font-size: min(clamp(12rem, 30cqw, 36rem), 45svh); white-space: nowrap; }
-  .js .entrance-date .wedding-banner-track { display: flex; width: max-content; animation: wedding-scroll 26s linear infinite; }
-  .js .entrance-date .wedding-banner-group { display: flex; min-width: 100vw; padding: 0 3vw; white-space: nowrap; }
-  .js .entrance-date.is-paused .wedding-banner-track { animation-play-state: paused; }
-}
-@media (prefers-reduced-motion: no-preference) and (max-height: 600px) {
-  .js .entrance-date { font-size: min(clamp(12rem, 30cqw, 36rem), 25svh); }
+.js .is-ready .entrance-date span:nth-child(2) { animation-duration: .7s; animation-delay: 3.7s; }
+.js .is-ready .entrance-date span:nth-child(3) { animation-duration: .6s; animation-delay: 4.4s; }
+.js .is-ready .entrance-date span:nth-child(4) { animation-duration: .8s; animation-delay: 5s; }
+.js.is-address-entry .entrance-date span { animation: none; -webkit-mask: none; mask: none; }
+@keyframes date-fade {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; opacity: 0; }
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; opacity: 1; }
 }
 .entrance-photo-bottom { width: 100%; margin-top: auto; }
 .entrance-city { margin: 0 0 1.25rem; font-size: clamp(.85rem, 2.4cqw, 1.5rem); letter-spacing: .12em; text-transform: uppercase; }
@@ -213,6 +203,7 @@
   .js[data-layout="curtain"] .is-ready .curtain-intro { display: none; }
   .entrance-page *, .entrance-page *::before, .entrance-page *::after { animation: none !important; transition: none !important; }
   .js .entrance-photo-copy, .form-text-reveal { opacity: 1; transform: none; }
+  .js .is-ready .entrance-date span { -webkit-mask: none; mask: none; }
 }
 
 .field.has-suggestions { position: relative; }
