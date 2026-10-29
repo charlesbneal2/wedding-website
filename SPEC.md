@@ -325,7 +325,7 @@ been made.
    No framework or package build is needed.
 3. Package only `/`, `/save-the-date/`, `/rsvp/`, their required CSS/JavaScript,
    favicon, and referenced optimized images. Exclude `apps-script/`, tests,
-   docs, palette study, original photos, and guest data. Review/commit the
+   docs, original photos, and guest data. Review/commit the
    intended release before pushing; local untracked files are not published
    automatically.
 4. Use GitHub's configure-pages, upload-pages-artifact, and deploy-pages actions.

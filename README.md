@@ -4,8 +4,7 @@ Static HTML/CSS/JavaScript; no package installation or framework build is needed
 
 The selected Save the Date is `/save-the-date/`: curtain entrance A, no Replay
 button, three covering photographs, and a cream mailing form with berry text.
-Superseded preview/comparison pages have been removed. The separate palette
-study remains local at `/save-the-date/palette-study/`.
+Superseded preview/comparison pages have been removed.
 
 ## Local setup
 
@@ -37,7 +36,6 @@ Keep the terminal running, then open:
 | Mailing address form | http://localhost:8000/save-the-date/#address |
 | Home | http://localhost:8000/ |
 | RSVP | http://localhost:8000/rsvp/ |
-| Palette study | http://localhost:8000/save-the-date/palette-study/ |
 
 Edit the HTML, CSS, or JavaScript files and refresh the browser to see changes.
 Press **Ctrl+C** in the terminal to stop the server.

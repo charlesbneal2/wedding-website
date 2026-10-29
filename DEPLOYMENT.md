@@ -18,8 +18,7 @@ Detailed configuration and official references are in `SPEC.md`, section 6.
 ## Ordered rollout
 
 1. **Finish the selected site.** Keep `/`, `/save-the-date/`, and `/rsvp/`.
-   Remove superseded save-the-date prototypes. Retain the palette study locally,
-   but leave it out of the guest release. Verify desktop natural-proportion
+   Remove superseded save-the-date prototypes. Verify desktop natural-proportion
    photos, mobile scrolling, keyboard access, reduced motion, and the address link.
 2. **Activate address collection.** Create the named spreadsheet, run
    `setupWeddingResponses`, authorize Apps Script, and deploy its web app as the
@@ -36,7 +35,7 @@ Detailed configuration and official references are in `SPEC.md`, section 6.
    visibility or purchase a plan implicitly. Once eligible, add a manually
    triggered GitHub Actions Pages workflow for `master`, packaging only the three
    public pages, their CSS/JS, favicon, and referenced optimized images. Exclude
-   backend source/tests, documentation, palette study, originals, and response
+   backend source/tests, documentation, originals, and response
    exports. The local sample PR was opened before pushing; the requested fork,
    push, and publication are authorized. Website publication remains blocked.
 4. **Verify the domain before switching traffic.** Keep a copy of the current

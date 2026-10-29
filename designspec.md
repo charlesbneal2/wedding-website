@@ -26,7 +26,7 @@ A direct `#address` visit bypasses the introduction and reaches the form.
 
 **Selected cream mailing form:** The canonical page uses the regular full-size
 cream form with boxed fields and a purple send button that turns green on hover. Headings, labels, and
-entered text use the palette study's muted berry `#80505d`; photo copy stays white.
+entered text use muted berry `#80505d`; photo copy stays white.
 The form heading, introduction, labels, and input text use Libre Baskerville
 at weight 700 for consistent, more readable lettering.
 After the entrance, the supplied embrace and piano/ring photographs appear
@@ -42,8 +42,6 @@ backing paper, window bar, or mangosteen decoration. Headings, labels, and butto
 text fade gently upward as they enter the viewport; inputs stay visible and
 usable throughout. Reduced motion displays all text immediately.
 Superseded entrance/form/scroll comparisons and green/cream previews are removed.
-The separate palette investigation remains at `save-the-date/palette-study/`
-for local art-direction work, not the guest release.
 The submit button remains disabled until a real Apps Script `/exec` endpoint
 is configured; confirmation appears only after a successful backend save.
 
