@@ -31,6 +31,7 @@ experiments or add navigation, decoration, or motion without a clear purpose.
 | `/save-the-date/` | Selected automatic curtain entrance A, three stacked photographs, and the cream mailing-address form |
 | `/save-the-date/#address` | The same page, bypassing the entrance and going directly to the form |
 | `/rsvp/` | Its existing sofa photograph and only the message "RSVP opens soon" |
+| `/save-the-date/mangosteen-preview.html` | Separate animation experiment; not part of the selected guest experience and never submits addresses |
 
 ### Home
 
@@ -73,7 +74,7 @@ A complete RSVP interface is future work, not part of this approved release.
 | Home and RSVP messages | Libre Baskerville | 400, 16px, centered; both pages must match |
 | Save the Date curtain headline | Marcellus | 400, uppercase, tight `-.055em` tracking |
 | Couple's names on the first photograph | Pinyon Script | 400; keep the script character |
-| Date on the first photograph | Marcellus | 400, white, responsive size |
+| Date on the first photograph | Marcellus | 400, giant white centered marquee; static/wrapped with reduced motion or no JavaScript |
 | Curtain introduction, Houston location, and photo CTA | Libre Baskerville | 400; supporting copy, not another decorative face |
 | Mailing Address heading and form introduction | Libre Baskerville | 700; uppercase presentation |
 | Form labels and entered input text | Libre Baskerville | 700; consistent with the heading and easier to read |
@@ -104,11 +105,26 @@ The submit button turns green on hover and retains light text. It must remain
 readable in its disabled state, not become faint. Keyboard focus is visible
 without requiring hover. Keep the existing pill shape for buttons.
 
+Focused address inputs thicken their existing border from 1px to 2px in berry,
+without an additional outer outline. Compensate with padding so field dimensions
+and text alignment do not jump. Buttons retain their visible keyboard-focus outline.
+
 The address section and input boxes have square corners; the rounded cream
 photo frames belong to the holding pages, not the Save the Date gallery.
 Use the existing subtle paper grain, not new oversized artwork.
 Keep the original pixel-art mangosteen favicon. No active page has a footer,
 footer lace, lotus, or separate credits block.
+
+### Separate mangosteen motion preview
+
+The explicitly requested standalone HTML preview reuses `assets\favicon.svg`
+as six decorative pixel mangosteens. They fall from the top of the mailing
+area, bounce off its bottom and sides, and periodically fall again.
+Artwork sits behind the form and does not intercept pointer events or obscure
+input text. Pause/Resume is available; reduced motion uses static artwork.
+The preview loads neither the submission handler nor Places autocomplete,
+keeps its send button disabled, and prevents form submission.
+This is a new optional experiment, not approval to add fruit to the main page.
 
 ## 5. Save the Date: content and photographs
 
@@ -123,8 +139,16 @@ or a query-selected study.
 
 The opening introduction reads "Together with our families," followed by
 "we invite you to", then the image-filled SAVE THE DATE headline.
-The first photograph contains "Trisa & Charles", "June 26, 2027",
+The first photograph contains "Trisa & Charles", "Saturday, June 26, 2027",
 "Houston, Texas", and "Share your mailing address".
+
+The date runs horizontally across the center of the first photograph in giant
+Marcellus lettering, between the names and bottom address CTA. Keep the date
+inside the hero: it scrolls away with the other photo copy, not over the form.
+The requested poster-scale treatment uses `clamp(12rem, 30cqw, 36rem)`, capped
+at 45svh (25svh on short screens) so the names and address link remain clear.
+Reuse the date-banner Pause/Play control. Duplicate visual text is hidden from
+assistive technology; a single semantic time element carries the full date.
 
 **The location and address CTA belong on the first photograph only.**
 Moving the CTA to the third photograph was tried and explicitly undone.
@@ -155,6 +179,8 @@ Retain the full-bleed, viewport-height photographic panels with cover cropping.
 This intentionally differs from desktop's natural-height gallery.
 Keep the couple, date, location, and CTA readable within the available width.
 The curtain headline stacks SAVE / THE / DATE.
+The moving date may extend beyond the photo's edges, but must be clipped inside
+its banner rather than cause horizontal page scrolling.
 
 ### Layering and form
 
@@ -185,6 +211,7 @@ button, A/B switch, or comparison control.
 | Curtain title exit | Fade and move upward 12px during the 0.9s opening |
 | Form text | Fade/rise from 8px below over 0.5s; introduction/status have a 0.1s stagger |
 | Button hover | Existing 0.18s background/text-color transition |
+| Centered date marquee | Seamless 26s linear horizontal loop; Pause/Play stops and resumes it |
 
 Curtain movement uses `cubic-bezier(.76, 0, .24, 1)`. The photo/headline/copy
 reveals use `cubic-bezier(.2, .65, .25, 1)` where specified in the stylesheet.
@@ -207,6 +234,8 @@ With `prefers-reduced-motion: reduce`, skip the animated curtain, disable
 animation/transitions, reveal copy immediately, and use non-smooth anchor
 scrolling. The current CSS sticky layering remains; do not describe it as a
 separate fully unpinned layout.
+The date marquee becomes one static, wrapping copy of the complete date,
+with no pause control. Use the same readable static treatment without JavaScript.
 
 Opening `/save-the-date/#address` bypasses the curtain and immediately positions
 the mailing form. Neither direct entry nor reduced motion may leave hidden
@@ -228,7 +257,7 @@ just because the backend has compatibility columns.
 | Backend not configured | Button disabled; show "Address collection is being set up. Please check back soon." No request or success claim |
 | Ready | Button says "Send my address"; purple by default, green on hover |
 | Sending | Button disabled and says "Sending..."; do not create duplicate submissions |
-| Confirmed save | Button says "Sent!", remains visible and disabled, and the thank-you message appears |
+| Confirmed save | Button says "Sent!" and remains visible and disabled; no separate thank-you message |
 | Failure | Restore the send label and enabled button, show the error, and preserve the entered information for retry |
 
 The sending label uses the existing typographic ellipsis in the interface.
@@ -237,9 +266,8 @@ Do not hide the address form or force a scroll away from its Sent! button.
 Repeated submits while sending or after success must not create another request.
 The changing button label has a polite live-region announcement.
 
-Thank-you copy:
-
-> We have your address. Watch your mailbox for your invitation.
+The Sent! button is the only success confirmation. Do not show a separate
+"Thank you!" heading or "We have your address" paragraph beneath it.
 
 The error explains that something went wrong and provides the existing contact
 email. Image-load failures also show explicit refresh guidance.
@@ -344,6 +372,8 @@ browser emulation alone is not final device acceptance.
 
 - [ ] Automatic curtain A completes on mobile and desktop; mobile title stacks correctly.
 - [ ] The first photograph contains names/date/location and the only address CTA.
+- [ ] The giant centered date scrolls horizontally, pauses/resumes, and cannot overflow the page.
+- [ ] Reduced motion and no JavaScript show the complete date statically without duplicate visible copies.
 - [ ] Hero copy scrolls away; later photos cover earlier panels in the correct order.
 - [ ] Both desktop gallery photographs fill the width at natural height; every bottom is reachable.
 - [ ] Mobile retains the approved full-bleed viewport-height gallery treatment.
@@ -352,13 +382,14 @@ browser emulation alone is not final device acceptance.
 - [ ] The direct address link and `#address` entry work without a required entrance or replay.
 - [ ] Reduced motion exposes readable content immediately and does not block the form.
 - [ ] Keyboard focus is visible, field labels reveal on focus, and touch targets are usable.
+- [ ] Focused address inputs have a thicker existing border, no detached outline, and no layout shift.
 - [ ] The mobile keyboard does not leave fields or the submit button behind pinned imagery.
 
 ### Submission and launch acceptance
 
 - [ ] An unconfigured backend cannot send data or display Sent!/saved confirmation.
 - [ ] Pending and successful submissions cannot be submitted twice.
-- [ ] Confirmed saves leave a visible disabled Sent! button and show the thank-you message.
+- [ ] Confirmed saves leave a visible disabled Sent! button without a separate thank-you block.
 - [ ] Network, HTTP, or database failures show a retryable error and preserve fields.
 - [ ] An authorized live endpoint saves one approved synthetic submission into the `addresses` table.
 - [ ] The original repository push, hosted routes/assets, domain, HTTPS, and mobile/desktop guest flows are verified.
@@ -384,6 +415,7 @@ These records do not substitute for the live acceptance gates above.
 | `save-the-date\index.html` | Canonical curtain markup, three photographs, address form |
 | `save-the-date\save-the-date.css` | Curtain, gallery, cream form, responsive rules, motion |
 | `save-the-date\save-the-date.js` | Entrance lifecycle, hash bypass, reveals, sticky offsets, image errors |
+| `save-the-date\mangosteen-preview.html` | Isolated favicon animation experiment with no backend submission |
 | `script.js` | Supabase insert, config gate, sending/error/Sent! states, duplicate-submit protection |
 | `supabase\schema.sql` | Table, constraints, insert-only row-level security |
 | `README.md` | Clone and local-launch instructions |

@@ -44,7 +44,14 @@
            alt="Charles twirling Trisa beneath an arched doorway">
       <div class="entrance-photo-copy">
         <p class="entrance-names">Trisa &amp; Charles</p>
-        <time class="entrance-date" datetime="2027-06-26"><span>June 26,</span> <span>2027</span></time>
+        <div class="wedding-banner entrance-date">
+          <time class="visually-hidden" datetime="2027-06-26">Saturday, June 26, 2027</time>
+          <div class="wedding-banner-track" id="wedding-date-track" aria-hidden="true">
+            <div class="wedding-banner-group"><span>Saturday, June 26, 2027</span></div>
+            <div class="wedding-banner-group"><span>Saturday, June 26, 2027</span></div>
+          </div>
+          <button class="banner-toggle" type="button" aria-label="Pause date banner" aria-controls="wedding-date-track" aria-pressed="false" hidden>Pause</button>
+        </div>
         <div class="entrance-photo-bottom">
           <p class="entrance-city">Houston, Texas</p>
           <a class="btn entrance-address-link" href="#address">Share your mailing address <span aria-hidden="true">&darr;</span></a>
@@ -101,11 +108,6 @@
           <p class="submission-status" data-backend-status role="status">Address collection is being set up. Please check back soon.</p>
           <p class="error" role="alert" hidden>Something went wrong. Please try again or email us at <a href="mailto:charlesbneal2@gmail.com">charlesbneal2@gmail.com</a>.</p>
         </form>
-
-        <div class="thanks" role="status" hidden>
-          <h2>Thank you!</h2>
-          <p>We have your address. Watch your mailbox for your invitation.</p>
-      </div>
     </div>
   </section>
 </main>

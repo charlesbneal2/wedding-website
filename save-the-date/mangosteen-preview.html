@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mangosteen animation preview</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/save-the-date/save-the-date.css">
+<style>
+.mangosteen-preview .entrance-address { isolation: isolate; }
+.mangosteen-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.mangosteen-field img { position: absolute; top: 0; left: 0; image-rendering: pixelated; will-change: transform; }
+.mangosteen-preview .entrance-form { position: relative; z-index: 1; }
+.mangosteen-preview .entrance-form input { background: var(--form-paper); }
+.mangosteen-preview label,
+.mangosteen-preview h2,
+.mangosteen-preview .entrance-form-intro { width: fit-content; background: var(--form-paper); }
+.mangosteen-preview h2,
+.mangosteen-preview .entrance-form-intro { margin-left: auto; margin-right: auto; }
+.preview-controls { margin: 0 0 2rem; text-align: center; }
+.preview-toggle { padding: .5rem 1rem; border: 1px solid var(--berry); border-radius: 999px; background: var(--form-paper); color: inherit; font-size: .75rem; cursor: pointer; }
+.preview-note { padding: .5rem; background: var(--form-paper); }
+</style>
+</head>
+<body class="entrance-page mangosteen-preview">
+<main class="entrance-address" id="animation-stage">
+  <div class="mangosteen-field" aria-hidden="true"></div>
+  <div class="entrance-form">
+    <form aria-labelledby="address-title" aria-describedby="preview-status">
+      <h2 id="address-title">Mailing Address</h2>
+      <p class="entrance-form-intro">Formal invitation to follow</p>
+      <div class="preview-controls">
+        <button class="preview-toggle" type="button" aria-pressed="false" hidden>Pause animation</button>
+      </div>
+      <div class="field"><label for="name">Name</label>
+        <input id="name" type="text" autocomplete="off"></div>
+      <div class="field"><label for="email">Email</label>
+        <input id="email" type="email" autocomplete="off"></div>
+      <div class="field"><label for="address1">Street address</label>
+        <input id="address1" type="text" autocomplete="off"></div>
+      <div class="field"><label for="address2">Apt / Unit (optional)</label>
+        <input id="address2" type="text" autocomplete="off"></div>
+      <div class="field"><label for="city">City</label>
+        <input id="city" type="text" autocomplete="off"></div>
+      <div class="field"><label for="state">State / Province</label>
+        <input id="state" type="text" autocomplete="off"></div>
+      <div class="field"><label for="zip">ZIP / Postal code</label>
+        <input id="zip" type="text" autocomplete="off"></div>
+      <div class="field"><label for="country">Country</label>
+        <input id="country" type="text" autocomplete="off" value="United States"></div>
+      <button class="btn" type="submit" disabled>Send my address</button>
+      <p class="submission-status preview-note" id="preview-status" role="status">Animation preview only. No addresses are sent or stored.</p>
+    </form>
+  </div>
+</main>
+<script>
+(() => {
+  const stage = document.querySelector('#animation-stage');
+  const field = document.querySelector('.mangosteen-field');
+  const toggle = document.querySelector('.preview-toggle');
+  const status = document.querySelector('#preview-status');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sprites = Array.from({ length: 6 }, () => {
+    const image = document.createElement('img');
+    image.src = '/assets/favicon.svg';
+    image.alt = '';
+    field.append(image);
+    return { image, x: 0, y: 0, vx: 0, vy: 0, age: 0 };
+  });
+  let width = 0;
+  let height = 0;
+  let size = 0;
+  let frame = 0;
+  let previous = 0;
+  let paused = false;
+
+  const paint = () => {
+    for (const sprite of sprites) {
+      sprite.image.style.transform = `translate3d(${Math.round(sprite.x)}px, ${Math.round(sprite.y)}px, 0)`;
+    }
+  };
+
+  function reset() {
+    width = stage.clientWidth;
+    height = stage.clientHeight;
+    size = width <= 600 ? 32 : 48;
+    sprites.forEach((sprite, index) => {
+      sprite.image.style.width = `${size}px`;
+      sprite.image.style.height = `${size}px`;
+      sprite.x = (width - size) * (index + .5) / sprites.length;
+      sprite.y = reducedMotion.matches
+        ? (height - size) * (index + 1) / (sprites.length + 1)
+        : -size * (1 + index * 3);
+      sprite.vx = (index % 2 ? 1 : -1) * (70 + index * 12);
+      sprite.vy = 0;
+      sprite.age = index * .6;
+    });
+    paint();
+  }
+
+  function animate(time) {
+    const dt = previous ? Math.min((time - previous) / 1000, .035) : 0;
+    previous = time;
+    for (const sprite of sprites) {
+      sprite.vy += 800 * dt;
+      sprite.x += sprite.vx * dt;
+      sprite.y += sprite.vy * dt;
+      sprite.age += dt;
+      if (sprite.x < 0 || sprite.x > width - size) {
+        sprite.x = Math.max(0, Math.min(width - size, sprite.x));
+        sprite.vx *= -1;
+      }
+      if (sprite.y > height - size) {
+        sprite.y = height - size;
+        sprite.vy = -Math.max(180, Math.abs(sprite.vy) * .76);
+      }
+      if (sprite.age > 14 && sprite.y > height - size * 3) {
+        sprite.y = -size;
+        sprite.vy = 0;
+        sprite.age = 0;
+      }
+    }
+    paint();
+    frame = window.requestAnimationFrame(animate);
+  }
+
+  function syncMotion() {
+    window.cancelAnimationFrame(frame);
+    previous = 0;
+    toggle.hidden = reducedMotion.matches;
+    toggle.textContent = paused ? 'Resume animation' : 'Pause animation';
+    toggle.setAttribute('aria-pressed', String(paused));
+    status.textContent = reducedMotion.matches
+      ? 'Animation preview only. Reduced motion is enabled; artwork is static. No addresses are sent or stored.'
+      : 'Animation preview only. No addresses are sent or stored.';
+    if (!paused && !reducedMotion.matches && !document.hidden) {
+      frame = window.requestAnimationFrame(animate);
+    }
+  }
+
+  document.querySelector('form').addEventListener('submit', event => event.preventDefault());
+  toggle.addEventListener('click', () => { paused = !paused; syncMotion(); });
+  reducedMotion.addEventListener('change', () => { reset(); syncMotion(); });
+  document.addEventListener('visibilitychange', syncMotion);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(reset).observe(stage);
+  } else {
+    window.addEventListener('resize', reset);
+  }
+  reset();
+  syncMotion();
+})();
+</script>
+</body>
+</html>

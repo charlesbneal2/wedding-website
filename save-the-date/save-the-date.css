@@ -65,20 +65,39 @@
 }
 
 .entrance-date {
-  display: block;
-  margin: clamp(1rem, 4svh, 3rem) 0 2rem;
-  font: 400 clamp(3rem, min(14cqw, 18svh), 12rem)/.95 var(--font-editorial);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  transform: translateY(-50%);
+  color: inherit;
+  font: 400 clamp(2rem, 7cqw, 6rem)/1.1 var(--font-editorial);
   letter-spacing: -.055em;
+  white-space: normal;
 }
-.entrance-date span { display: block; }
-.entrance-date span + span { margin-top: .06em; }
-[data-layout="curtain"] .entrance-date {
-  margin-top: clamp(.75rem, 2svh, 1.5rem);
-  font-size: clamp(1.75rem, 8cqw, 5.5rem);
-  line-height: 1.1;
-  white-space: nowrap;
+.entrance-date .wedding-banner-track { display: block; width: 100%; animation: none; }
+.entrance-date .wedding-banner-group { display: block; min-width: 0; padding: 0 1.25rem; white-space: normal; }
+.entrance-date .wedding-banner-group + .wedding-banner-group { display: none; }
+.entrance-date .banner-toggle {
+  right: 50%;
+  bottom: .25rem;
+  transform: translateX(50%);
+  border-color: rgb(255 255 255 / 60%);
+  background: rgb(24 30 20 / 35%);
+  color: #fff;
 }
-[data-layout="curtain"] .entrance-date span { display: inline; margin: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .entrance-date { padding: 2rem 0; font-size: min(clamp(12rem, 30cqw, 36rem), 45svh); white-space: nowrap; }
+  .js .entrance-date .wedding-banner-track { display: flex; width: max-content; animation: wedding-scroll 26s linear infinite; }
+  .js .entrance-date .wedding-banner-group { display: flex; min-width: 100vw; padding: 0 3vw; white-space: nowrap; }
+  .js .entrance-date.is-paused .wedding-banner-track { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-height: 600px) {
+  .js .entrance-date { font-size: min(clamp(12rem, 30cqw, 36rem), 25svh); }
+}
 .entrance-photo-bottom { width: 100%; margin-top: auto; }
 .entrance-city { margin: 0 0 1.25rem; font-size: clamp(.85rem, 2.4cqw, 1.5rem); letter-spacing: .12em; text-transform: uppercase; }
 .entrance-address-link { max-width: 100%; border-color: #fff; background: rgb(24 30 20 / 35%); color: #fff; font-size: clamp(.7rem, 1.7cqw, 1rem); }
@@ -154,7 +173,7 @@
 
 .entrance-address { position: relative; z-index: 2; min-height: 100svh; overflow: clip; background: var(--form-paper); color: var(--berry); }
 .entrance-form { max-width: 688px; margin: 0 auto; }
-.entrance-form > form, .entrance-form > .thanks { position: relative; padding: 4rem 1.5rem; }
+.entrance-form > form { position: relative; padding: 4rem 1.5rem; }
 .entrance-form h2 { margin: 0 0 .4rem; font: 700 1.4rem/1.5 var(--font-body); letter-spacing: .025em; text-align: center; text-transform: uppercase; }
 .entrance-form-intro { margin: 0 0 3rem; font-size: .9rem; font-weight: 700; text-align: center; text-transform: uppercase; }
 .entrance-form .field { margin-bottom: 1.5rem; }
@@ -168,12 +187,16 @@
   font-weight: 700;
   line-height: 1.5;
 }
+.entrance-form input:focus {
+  padding: calc(.7rem - 1px) calc(.75rem - 1px);
+  border: 2px solid var(--berry);
+  outline: none;
+}
 .entrance-form .btn { margin-top: 1.5rem; padding: .95rem 1rem; border-color: var(--button-purple); background: var(--button-purple); color: var(--form-paper); }
 .entrance-form .btn:disabled { opacity: 1; cursor: default; }
 .entrance-form .btn:hover { border-color: var(--ink); background: var(--ink); color: var(--form-paper); }
 .submission-status { margin: 1rem 0 0; font-size: .65rem; text-align: center; }
 .entrance-form :focus-visible { outline-color: var(--berry); }
-.entrance-form > .thanks { text-align: center; }
 
 .form-text-reveal { opacity: 0; transform: translateY(8px); transition: none; }
 .form-text-reveal.is-visible { opacity: 1; transform: none; transition: opacity .5s ease, transform .5s ease; }

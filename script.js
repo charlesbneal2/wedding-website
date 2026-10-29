@@ -50,7 +50,6 @@ if (bannerToggle) {
 document.querySelectorAll('form[data-form]').forEach(form => {
   const btn = form.querySelector('button[type=submit]');
   const error = form.querySelector('.error');
-  const thanks = form.parentElement.querySelector('.thanks');
   const backendStatus = form.querySelector('[data-backend-status]');
   const table = TABLES[form.dataset.form];
   const backendConfigured = Boolean(table && SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
@@ -84,11 +83,12 @@ document.querySelectorAll('form[data-form]').forEach(form => {
         });
         if (res.status !== 201) throw new Error(`Submission failed (${res.status})`);
       }
-      thanks.hidden = false;
       if (form.dataset.form === 'address') {
         btn.textContent = 'Sent!';
       } else {
+        const thanks = form.parentElement.querySelector('.thanks');
         form.hidden = true;
+        thanks.hidden = false;
         thanks.scrollIntoView({ block: 'center' });
       }
     } catch (failure) {
