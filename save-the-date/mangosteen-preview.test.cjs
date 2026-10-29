@@ -34,11 +34,15 @@ function preview(width = 1440, reduced = false) {
     constructor(callback) { resize = callback; }
     observe() {}
   }
+  const math = Object.create(Math);
+  math.random = () => .5;
   vm.runInNewContext(source, {
     document,
+    Math: math,
     ResizeObserver,
     window: {
       ResizeObserver,
+      innerHeight: width > 600 ? 1000 : 844,
       matchMedia() { return motion; },
       requestAnimationFrame(callback) {
         frames.set(++nextId, callback);
@@ -63,21 +67,19 @@ function preview(width = 1440, reduced = false) {
   };
 }
 
+const yPosition = image => Number(image.style.transform.split(',')[1].trim().replace('px', ''));
+
 for (const width of [1440, 390]) {
-  test(`three single rows fall once and disappear at ${width}px`, () => {
+  test(`scattered fruit falls once and disappears at ${width}px`, () => {
     const page = preview(width);
     assert.equal(page.images.filter(image => image.src === '/assets/mangosteen-pink.svg').length, 7);
+    assert.equal(page.visible().length, 18);
+    const viewportHeight = width > 600 ? 1000 : 844;
+    const bands = new Set(page.visible().map(image => Math.floor(yPosition(image) / viewportHeight * 3)));
+    assert.deepEqual([...bands].sort(), [0, 1, 2]);
     const seen = new Set();
-    page.advance(60, () => {
-      const visible = page.visible();
-      if (!visible.length) return;
-      assert.equal(visible.length, 8);
-      const row = Math.floor(page.images.indexOf(visible[0]) / 8);
-      assert.ok(visible.every(image => Math.floor(page.images.indexOf(image) / 8) === row));
-      assert.equal(new Set(visible.map(image => image.style.transform.split(',')[1])).size, 1);
-      seen.add(row);
-    });
-    assert.deepEqual([...seen], [0, 1, 2]);
+    page.advance(40, () => page.visible().forEach(image => seen.add(image)));
+    assert.equal(seen.size, 24);
     assert.equal(page.visible().length, 0);
     assert.equal(page.frames.size, 0);
     assert.equal(page.toggle.disabled, true);
@@ -92,7 +94,7 @@ for (const width of [1440, 390]) {
   });
 }
 
-test('pause freezes the current row and resume continues it', () => {
+test('pause freezes the scattering and resume continues it', () => {
   const page = preview();
   page.advance(4);
   page.toggle.click();
@@ -102,28 +104,40 @@ test('pause freezes the current row and resume continues it', () => {
   page.toggle.click();
   page.advance(1);
   assert.notDeepEqual(page.visible().map(image => image.style.transform), before);
-  assert.ok(page.visible().every(image => page.images.indexOf(image) < 8));
 });
 
-test('resizing preserves the row and reduced motion stays static', () => {
+test('resizing never revives finished fruit and reduced motion stays static', () => {
   const page = preview();
-  page.advance(20);
-  assert.ok(page.visible().every(image => page.images.indexOf(image) >= 8));
+  page.advance(4);
   page.stage.clientWidth = 390;
   page.stage.clientHeight = 844;
   page.resize();
-  assert.ok(page.visible().every(image => {
-    const index = page.images.indexOf(image);
-    return index >= 8 && index < 16;
-  }));
+  const finished = page.images.filter(image => image.hidden);
+  assert.ok(finished.length > 0);
+  page.stage.clientHeight = 2000;
+  page.resize();
+  assert.ok(finished.every(image => image.hidden));
   page.advance(60);
   assert.equal(page.visible().length, 0);
 
   const staticPage = preview(390, true);
-  assert.equal(staticPage.visible().length, 8);
+  assert.equal(staticPage.visible().length, 24);
   assert.equal(staticPage.toggle.hidden, true);
   const before = staticPage.visible().map(image => image.style.transform);
   staticPage.advance(60);
   assert.deepEqual(staticPage.visible().map(image => image.style.transform), before);
   assert.equal(staticPage.frames.size, 0);
+});
+
+test('the 1.4x timeline speeds up falling and staggered starts by 40%', () => {
+  const page = preview();
+  const first = page.images[0];
+  const before = yPosition(first);
+  assert.equal(page.images[3].hidden, true);
+  page.advance(1.02);
+  assert.ok(Math.abs(yPosition(first) - before - 62.5 * 1.4) <= 1);
+  page.advance(.98);
+  assert.equal(page.images[3].hidden, true);
+  page.advance(.2);
+  assert.equal(page.images[3].hidden, false);
 });
