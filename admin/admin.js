@@ -45,6 +45,7 @@ function rowFor(record) {
   const date = tr.insertCell();
   date.className = 'date';
   date.textContent = new Date(record.created_at).toLocaleString();
+  date.title = `Originally received: ${new Date(record.created_at).toISOString()} (UTC). Shown in your device's local time.`;
 
   const inputs = {};
   for (const f of FIELDS) {
@@ -56,6 +57,7 @@ function rowFor(record) {
     const cell = tr.insertCell();
     cell.dataset.label = LABELS[f];
     cell.append(input);
+    if (f === 'address1') cell.classList.add('street-cell');
   }
 
   const actions = tr.insertCell();

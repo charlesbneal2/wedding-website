@@ -85,6 +85,11 @@ td input.changed { background: #fbf1cf; border-color: #d9b94c; }
 td.actions { display: flex; gap: .4rem; padding-right: .75rem; }
 tbody tr:hover { background: rgb(255 255 255 / 45%); }
 
+@media (min-width: 701px) {
+  main { max-width: none; }
+  .street-cell input { width: calc(24ch + 1rem + 2px); }
+}
+
 /* Phones: each row becomes a card with labeled fields instead of a wide table. */
 @media (max-width: 700px) {
   body { padding: 1.5rem 1rem 3rem; }

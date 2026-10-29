@@ -254,6 +254,37 @@
   gap: 1.25rem;
   max-width: 100%;
 }
+.address-thanks-heading {
+  --dance-frame: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) max-content minmax(0, 8rem);
+  align-items: center;
+  gap: clamp(.25rem, 1vw, 1rem);
+  width: 100%;
+  max-width: max-content;
+  animation: cat-dance .56s step-end infinite;
+}
+.address-thanks-cat {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.address-thanks-cat img {
+  display: block;
+  width: 400%;
+  max-width: none;
+  height: 100%;
+  image-rendering: pixelated;
+  transform: translateX(calc(var(--dance-frame) * -25%));
+}
+.address-thanks-cat-orange { transform: scaleX(-1); }
+@keyframes cat-dance {
+  0% { --dance-frame: 0; }
+  25% { --dance-frame: 1; }
+  50% { --dance-frame: 2; }
+  75%, 100% { --dance-frame: 3; }
+}
 .address-thanks-back {
   position: sticky;
   top: 1.5rem;
@@ -343,6 +374,6 @@
 }
 
 .field.has-suggestions { position: relative; }
-.suggestions { position: absolute; z-index: 5; left: 0; right: 0; margin: 0; padding: 0; list-style: none; border: 1px solid rgb(87 34 59 / 28%); border-top: 0; background: var(--form-paper); color: var(--berry); box-shadow: 0 8px 18px rgb(87 34 59 / 14%); }
+.suggestions { position: absolute; z-index: 5; left: 0; right: 0; max-height: 15rem; overflow-y: auto; margin: 0; padding: 0; list-style: none; border: 1px solid rgb(87 34 59 / 28%); border-top: 0; background: var(--form-paper); color: var(--berry); box-shadow: 0 8px 18px rgb(87 34 59 / 14%); }
 .suggestions li { padding: .6rem .75rem; font-size: .9rem; font-weight: 700; cursor: pointer; }
 .suggestions li:hover, .suggestions li[aria-selected="true"] { background: var(--berry); color: var(--form-paper); }

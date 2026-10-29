@@ -186,7 +186,7 @@ The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both 
 | `address1` | Street address | text | ✅ | `address-line1` |
 | `address2` | Apt / Unit | text | | `address-line2` |
 | `city` | City | text | ✅ | `address-level2` |
-| `state` | State / Province | text | ✅ | `address-level1` |
+| `state` | State / Province | text with country-aware abbreviation suggestions | US, Canada, Australia | `address-level1` |
 | `zip` | ZIP / Postal code | text | ✅ | `postal-code` |
 | `country` | Country (default "United States") | text | ✅ | `country-name` |
 | `guests` | Number of people in your household | number 1–10 | | |
@@ -198,14 +198,19 @@ Success state: replace the whole address form with a centered box saying
 tall as both the submitted form and the current viewport, focus it, and bring
 its message into view without exposing the previous photograph.
 Put "Thank you!" on its own line above "We have received your information.",
-without an illustration. Use the Send my address button's Libre Baskerville
+with a dancing gray cat to the left of the heading and a mirrored dancing
+orange cat to the right, but no central illustration. Keep their four-frame
+dance synchronized on one shared timeline, and static for reduced motion.
+Use the Send my address button's Libre Baskerville
 font in bold (700), in all caps, with the date's quick 0.8-second slide-in,
 with no delay and no animation for reduced motion.
 Keep falling mangosteens out of the input form. Start their frosted animation
 only on successful confirmation; hide and stop it when returning to the form.
 Each new confirmation restarts the fruit, with static fruit for reduced motion.
 The top-left "<" return button restores a fresh form (Country defaults to
-United States), clears stale autocomplete suggestions, and focuses Name.
+United States), clears stale autocomplete suggestions, and returns focus and
+scroll to the first photo with the names and wedding date, without focusing
+an input, reloading the page, or replaying the opening Save the Date animation.
 
 ### 4.2 RSVP form: phase 2
 
@@ -228,12 +233,21 @@ Kim Son typically serves a set banquet menu, so a meal-choice field is left out.
 
 1. Use native HTML validation (`required`, `type="email"`, `min`/`max`). No validation library.
 2. On submit, `fetch` a JSON `POST` to `{SUPABASE_URL}/rest/v1/{table}` with the `apikey` header and `Prefer: return=minimal`. Success is HTTP `201`; anything else is a failure. A filled honeypot skips the request and shows success.
+   Local development uses the same database submissions and Google Places
+   autocomplete as hosted sites, with no local-preview bypass or notice.
 3. Disable the button and show "Sending…" while the request runs, which prevents double submits.
 4. On address success, keep the send button disabled and replace the form with
    the full-height thank-you panel. Focus the panel and center it in view.
    Never show this confirmation while sending or after a failed request.
 5. **Address autocomplete (save-the-date only).** Typing in Street address suggests addresses from the Google Places API (New). Picking one fills street, unit, city, state, ZIP and country; every field stays editable and failures are silent, so typing by hand always works. The Google key in `script.js` is public by design, so it must stay restricted in Google Cloud Console to HTTP referrers (`trisaandcharleswedding.com/*`, `www.…/*`, `localhost:8000/*` for testing) and to Places API (New) only, with a daily quota cap and a billing budget alert.
 6. On failure, show *"Something went wrong. Please try again or email us at charlesbneal2@gmail.com."* Leave the form filled in so nothing is lost.
+
+State / Province suggestions match full names or abbreviations, but show and
+select only abbreviations. Include all 50 US states and DC, Canadian provinces
+and territories, and Australian states and territories. For other countries,
+allow optional free text; store a blank region as "N/A" for compatibility with
+the database's nonempty-state constraint. Update suggestions and required status
+after country edits, Places autofill, and form resets.
 
 ### 4.4 Backend: Supabase (`supabase/schema.sql`)
 
@@ -257,6 +271,13 @@ own machine for admin scripts. Never put it in `script.js` or commit it.
 
 A password-protected table of the `addresses` rows where you can edit any cell
 (Save per row), delete a row, filter by text and refresh.
+On desktop, the table uses the full available page width, with a fixed Street
+input width of approximately 24 characters plus padding. Hovering, focusing,
+and editing do not resize columns. The table scrolls horizontally as needed,
+and longer addresses remain intact and editable.
+Mobile retains the existing labeled cards. Received is the original `created_at`
+timestamp displayed in the device's local timezone, not the last edit time;
+its tooltip includes the original UTC timestamp.
 
 - **Login:** Supabase Auth, email + password. Create and manage the two logins in
   the Supabase dashboard (Authentication → Users → Add user; set or reset the

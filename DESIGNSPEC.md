@@ -336,6 +336,18 @@ just because the backend has compatibility columns.
 
 The sending label uses the existing typographic ellipsis in the interface.
 Success requires HTTP 201 from Supabase.
+Local development uses the same database saving and Places autocomplete as
+hosted sites, with no local-preview bypass or notice.
+Keep native validation and duplicate-submit protection. All sites require
+an actual successful save.
+State suggestions match names or abbreviations and display only postal
+abbreviations: all 50 US states plus DC, Canadian provinces and territories,
+and Australian states and territories. Match the current Country, keeping
+keyboard and touch selection consistent with street-address suggestions.
+Other countries keep an optional free-text State / Province field; save an
+empty region as "N/A" to satisfy the existing database constraint.
+Country changes, Places autofill, and form resets update the region suggestions
+and required state without clearing manually entered region information.
 After confirmation, hide the form and show its sibling thank-you panel. Keep
 the panel at least as tall as both the submitted form and the current viewport,
 so the section does not collapse or expose the previous photograph when centered.
@@ -343,7 +355,12 @@ Move keyboard focus to the panel and immediately center it in view.
 Use the existing cream, berry, and frosted styling with no panel border;
 the message stays sharp.
 Show "Thank you!" on its own line, then "We have received your information."
-Keep this content together in one centered group without an illustration.
+Keep this content together in one centered group without a central illustration.
+Flank "Thank you!" with the gray Dance cat on the left and a horizontally
+mirrored orange Dance cat on the right. Animate their four-frame sprite sheets
+from one shared frame index so both cats always show the same frame.
+Use crisp pixel rendering, scaling equally to fit narrow screens without
+shrinking the text. Reduced motion keeps the cats static.
 Use Libre Baskerville 700, uppercase with .1em tracking: the same font as the
 Send my address button, but bolder for readability. Reveal the group immediately on
 success with the date's `reveal-title` animation: 0.8 seconds,
@@ -357,7 +374,9 @@ tall confirmation is centered in the viewport. Use matching 1.5rem top and
 left insets on both mobile and desktop, measured from the full-width
 thank-you area rather than the centered form column. Returning resets the fields
 and autocomplete suggestions for a new submission, restores the send button,
-and focuses Name without resending the previous address.
+and returns focus and scroll to the opening photograph with the names and date,
+without resending the previous address, opening the keyboard, reloading the
+page, or replaying the entrance.
 Repeated submits while sending or after success must not create another request.
 The changing button label and the thank-you panel have polite live-region
 announcements. Never show the thank-you panel while sending or after a failure.
