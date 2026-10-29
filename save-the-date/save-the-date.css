@@ -170,7 +170,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: .4rem;
+  margin-bottom: calc(.4rem - var(--cat-size) * .125);
 }
 .address-heading h2 { margin: 0; }
 .address-cat {
@@ -246,7 +246,13 @@
 [data-mangosteens] { isolation: isolate; }
 .mangosteen-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .mangosteen-field img { position: absolute; top: 0; left: 0; image-rendering: pixelated; will-change: transform; }
-[data-mangosteens] .entrance-form { position: relative; z-index: 1; }
+[data-mangosteens] .entrance-form {
+  position: relative;
+  z-index: 1;
+  background: rgb(255 250 240 / 60%);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
 [data-mangosteens] .entrance-form input { background: var(--form-paper); }
 [data-mangosteens] label,
 [data-mangosteens] h2,

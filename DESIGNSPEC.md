@@ -133,6 +133,9 @@ visible cats on the heading. Keep pixel edges crisp at 128px on desktop and 64px
 on screens up to 600px; scale the mobile heading from 16px to its existing 22.4px
 without changing its font or weight. The heading stays centered between the
 cats, with the introduction below it and no artwork over the fields.
+Tighten the introduction's gap by 12.5% of the cat sprite size (8px on mobile,
+16px on desktop) to compensate for the transparent sprite canvas, while
+keeping both lines horizontally centered.
 These cats are named, keyboard-accessible buttons with at least 64px touch
 targets. Tapping the gray cat shows "tofu ~"; tapping the orange cat shows
 "miso ~". Use Press Start 2P for the small pixel-game speech bubbles, not for
@@ -165,6 +168,10 @@ pauses while it is offscreen. Keep it behind the real form, not over the
 photographs. Inputs keep opaque paper backing for readability. Labels, headings,
 introductory text, and status/error messages have transparent backgrounds so
 the falling fruit stays visible behind the lettering without rectangular cutouts.
+Use one translucent cream panel behind the entire form: 60% form-paper tint
+with a 4px backdrop blur. Fruit behind the panel stays visible but softly
+blurred; text, cats, and controls remain sharp. Keep the original form styling
+and full-width fruit scatter, not pixel brackets, stepped buttons, or edge lanes.
 The main form has no animation-control button; the finite effect stops
 automatically. Cat greetings never submit the form. Preserve the real address
 submission handler and Places autocomplete.
