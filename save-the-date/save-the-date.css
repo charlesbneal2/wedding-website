@@ -1,0 +1,193 @@
+.entrance-page {
+  --font-editorial: 'Marcellus', 'Times New Roman', serif;
+  --form-paper: #fffaf0;
+  --berry: #80505d;
+  --button-purple: #57223b;
+  background: var(--paper);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.entrance-hero { position: sticky; top: 0; z-index: 0; display: grid; min-height: 100svh; overflow: clip; }
+.curtain-intro { display: none; }
+
+.entrance-photo {
+  position: relative;
+  min-width: 0;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  background: var(--ink);
+  color: #fff;
+  text-align: center;
+}
+
+.entrance-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.entrance-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(24 30 20 / 46%), rgb(24 30 20 / 12%) 55%, rgb(24 30 20 / 60%));
+  pointer-events: none;
+}
+
+.entrance-photo-copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100svh;
+  padding: clamp(2rem, 5svh, 4rem) clamp(1.25rem, 4cqw, 4rem);
+}
+
+.entrance-names {
+  margin: 0;
+  font: 400 clamp(2.6rem, 8cqw, 6.5rem)/1.15 var(--font-display);
+}
+
+.entrance-date {
+  display: block;
+  margin: clamp(1rem, 4svh, 3rem) 0 2rem;
+  font: 400 clamp(3rem, min(14cqw, 18svh), 12rem)/.95 var(--font-editorial);
+  letter-spacing: -.055em;
+}
+.entrance-date span { display: block; }
+.entrance-date span + span { margin-top: .06em; }
+[data-layout="curtain"] .entrance-date {
+  margin-top: clamp(.75rem, 2svh, 1.5rem);
+  font-size: clamp(1.75rem, 8cqw, 5.5rem);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+[data-layout="curtain"] .entrance-date span { display: inline; margin: 0; }
+.entrance-photo-bottom { width: 100%; margin-top: auto; }
+.entrance-city { margin: 0 0 1.25rem; font-size: clamp(.85rem, 2.4cqw, 1.5rem); letter-spacing: .12em; text-transform: uppercase; }
+.entrance-address-link { max-width: 100%; border-color: #fff; background: rgb(24 30 20 / 35%); color: #fff; font-size: clamp(.7rem, 1.7cqw, 1rem); }
+.entrance-address-link span { padding-left: .5rem; }
+.entrance-address-link:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+.entrance-photo :focus-visible { outline-color: #fff; }
+.entrance-photo-error,
+.entrance-gallery-error { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 1rem; background: var(--ink); font-size: .85rem; }
+
+.entrance-gallery-photo {
+  position: sticky;
+  top: var(--gallery-sticky-top, 0px);
+  z-index: 1;
+  height: 100svh;
+  overflow: clip;
+  background: var(--ink);
+  color: #fff;
+}
+.entrance-gallery-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+@media (min-width: 601px) {
+  .entrance-gallery-photo { height: auto; }
+  .entrance-gallery-image { position: relative; display: block; height: auto; }
+}
+
+.announcement-label { margin: 0; font-size: clamp(.65rem, 2.2cqw, 1rem); letter-spacing: .12em; text-transform: uppercase; }
+.announcement-label span { display: block; }
+
+.js[data-layout="curtain"] .curtain-intro { display: block; position: fixed; inset: 0; z-index: 20; overflow: clip; }
+[data-layout="curtain"] .is-ready .curtain-intro { pointer-events: none; }
+.curtain-half { position: absolute; top: 0; bottom: 0; width: 50.1%; background: var(--paper); }
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
+.curtain-title-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+.curtain-title { margin: 0; color: var(--ink); font: 400 14vw/1 var(--font-editorial); letter-spacing: -.055em; text-transform: uppercase; white-space: nowrap; }
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .curtain-title {
+    background: var(--ink) url(/assets/img/save-the-date-dance.jpg) center 45% / cover no-repeat;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
+
+.js .entrance-photo-copy { opacity: 0; }
+.js[data-layout="curtain"] .curtain-title, .js[data-layout="curtain"] .announcement-label { opacity: 0; }
+.is-ready .entrance-image { animation: photo-settle 2.4s cubic-bezier(.2, .65, .25, 1) both; }
+.is-ready .entrance-photo-copy { animation: reveal-copy 1s 1.55s cubic-bezier(.2, .65, .25, 1) both; }
+[data-layout="curtain"] .is-ready .curtain-title { animation: reveal-title .8s .75s cubic-bezier(.2, .65, .25, 1) both; }
+[data-layout="curtain"] .is-expanded .curtain-left { animation: curtain-left .9s cubic-bezier(.76, 0, .24, 1) forwards; }
+[data-layout="curtain"] .is-expanded .curtain-right { animation: curtain-right .9s cubic-bezier(.76, 0, .24, 1) forwards; }
+[data-layout="curtain"] .is-expanded .curtain-title-wrap { animation: curtain-title .9s both; }
+[data-layout="curtain"] .is-ready .entrance-photo-copy { animation-delay: .55s; }
+.is-ready .announcement-label { animation: reveal-copy .55s .1s both; }
+.js.is-address-entry .curtain-intro { display: none; }
+
+@keyframes curtain-left { to { transform: translateX(-101%); } }
+@keyframes curtain-right { to { transform: translateX(101%); } }
+@keyframes curtain-title {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-12px); visibility: hidden; }
+}
+@keyframes photo-settle { from { transform: scale(1.07); } to { transform: scale(1); } }
+@keyframes reveal-copy { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes reveal-title { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: translateX(0); } }
+
+.entrance-address { position: relative; z-index: 2; min-height: 100svh; overflow: clip; background: var(--form-paper); color: var(--berry); }
+.entrance-form { max-width: 688px; margin: 0 auto; }
+.entrance-form > form, .entrance-form > .thanks { position: relative; padding: 4rem 1.5rem; }
+.entrance-form h2 { margin: 0 0 .4rem; font: 700 1.4rem/1.5 var(--font-body); letter-spacing: .025em; text-align: center; text-transform: uppercase; }
+.entrance-form-intro { margin: 0 0 3rem; font-size: .9rem; font-weight: 700; text-align: center; text-transform: uppercase; }
+.entrance-form .field { margin-bottom: 1.5rem; }
+.entrance-form label { margin-bottom: .45rem; font-size: .75rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; }
+.entrance-form input {
+  padding: .7rem .75rem;
+  border: 1px solid rgb(87 34 59 / 28%);
+  border-radius: 0;
+  background: rgb(255 255 255 / 68%);
+  color: inherit;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.entrance-form .btn { margin-top: 1.5rem; padding: .95rem 1rem; border-color: var(--button-purple); background: var(--button-purple); color: var(--form-paper); }
+.entrance-form .btn:disabled { opacity: 1; cursor: default; }
+.entrance-form .btn:hover { border-color: var(--ink); background: var(--ink); color: var(--form-paper); }
+.submission-status { margin: 1rem 0 0; font-size: .65rem; text-align: center; }
+.entrance-form :focus-visible { outline-color: var(--berry); }
+.entrance-form > .thanks { text-align: center; }
+
+.form-text-reveal { opacity: 0; transform: translateY(8px); transition: none; }
+.form-text-reveal.is-visible { opacity: 1; transform: none; transition: opacity .5s ease, transform .5s ease; }
+.entrance-form-intro.form-text-reveal.is-visible,
+.submission-status.form-text-reveal.is-visible { transition-delay: .1s; }
+
+@media (max-width: 600px) {
+  .curtain-title-wrap { gap: .75rem; }
+  .curtain-title { font-size: clamp(4rem, min(28vw, 24svh), 10rem); line-height: .9; white-space: normal; text-align: center; }
+  .curtain-title span { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js[data-layout="curtain"] .is-ready .curtain-intro { display: none; }
+  .entrance-page *, .entrance-page *::before, .entrance-page *::after { animation: none !important; transition: none !important; }
+  .js .entrance-photo-copy, .form-text-reveal { opacity: 1; transform: none; }
+}

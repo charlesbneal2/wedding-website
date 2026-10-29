@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 60 60">
-  <g fill="#C4245A">
-    <ellipse cy="-14" rx="9" ry="15"/>
-    <ellipse cy="-14" rx="9" ry="15" transform="rotate(72)"/>
-    <ellipse cy="-14" rx="9" ry="15" transform="rotate(144)"/>
-    <ellipse cy="-14" rx="9" ry="15" transform="rotate(216)"/>
-    <ellipse cy="-14" rx="9" ry="15" transform="rotate(288)"/>
-  </g>
-  <circle r="5" fill="#C9A24C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <title>Mangosteen</title>
+  <path fill="#672c68" d="M10 10h12v2h4v4h2v8h-2v4h-4v2H10v-2H6v-4H4v-8h2v-4h4Z"/>
+  <path fill="#9f3b96" d="M10 12h12v2h2v4h2v6h-2v2h-4v2h-8v-2H8v-4H6v-4h2v-4h2Z"/>
+  <path fill="#c052b3" d="M12 14h10v4h2v4h-2v2h-4v2h-6v-2H10v-6h2Z"/>
+  <path fill="#588a42" d="M14 2h4v2h2v6h-4V6h-2Z"/>
+  <path fill="#83ad53" d="M4 10h4V8h6v2h4v4h-4v2H8v-2H4Z"/>
+  <path fill="#abd66a" d="M16 10h4V8h6v2h2v4h-4v2h-6v-2h-2Z"/>
+  <path fill="#668e3b" d="M12 10h8v4h-2v2h-4v-2h-2Z"/>
+  <path fill="#f7d8f0" d="M10 18h4v2h-4Zm-2 2h2v2H8Z"/>
 </svg>

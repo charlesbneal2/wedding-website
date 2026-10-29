@@ -5,7 +5,8 @@
 **Event:** Saturday, June 26, 2027 · 5:00 PM · Kim Son Restaurant, 10603 Bellaire Blvd, Houston, TX 77072
 **RSVP by:** Wednesday, May 26, 2027
 **Dress code:** Cocktail attire
-**Repo:** `github.com/charlesbneal2/wedding-website`
+**Repo:** Verified private fork `github.com/trisavo/wedding-website`;
+upstream `github.com/charlesbneal2/wedding-website`
 
 ## 1. Goals
 
@@ -50,7 +51,7 @@ Out of scope: guest logins, a photo lightbox library, a CMS.
 | Concern | Choice | Why |
 |---|---|---|
 | Site | Plain HTML + CSS + about 40 lines of JS. No framework, no build step | One page, rare edits, nothing to upgrade or break before 2027 |
-| Hosting | GitHub Pages | Free, HTTPS, custom domain, deploys on `git push` |
+| Hosting | GitHub Pages, curated GitHub Actions release | Static hosting, HTTPS and custom domain; publish only approved site files |
 | Form backend | Google Apps Script → Google Sheet | Free, no server to run, both of you can see and edit the data, exports to CSV for the stationer or labels |
 | DNS | Your current registrar, pointed at GitHub Pages | No domain transfer needed |
 
@@ -69,8 +70,8 @@ The invitation suite (`assets/invitation.jpeg` once added) sets the theme:
 - an ivory insert card with gold-foil copperplate script names
 - a wine-colored RSVP card with gold foil
 - a blush envelope with a mauve floral liner (used for color only)
-- bilingual English and Vietnamese text
-- the motto *strength · belief · determination* in gold script
+- English-only text
+- a single-color lotus emblem
 
 ### 3.1 Core concept: the page is the invitation
 
@@ -89,7 +90,7 @@ These values are sampled from the photo. Before launch, hold the real card next 
 | `--ivory` | `#FBF7F0` | Insert card | Content cards, inputs |
 | `--gold` | `#C9A24C` | Foil | Script names and headings **on wine or peony only**, thin rules |
 | `--gold-deep` | `#8E6B22` | Foil, darkened | Gold text on ivory (large display text only) |
-| `--mauve` | `#7D5B60` | Liner line art | Vietnamese subtitles, captions |
+| `--mauve` | `#7D5B60` | Liner line art | Captions |
 
 **Contrast rule:** body text is always `--wine` on `--ivory`, or `--ivory` on `--wine`/`--peony`. Light gold on ivory fails WCAG contrast, so use gold on ivory only for large script text and never for form labels or paragraphs. Foil can't be reproduced on screen, so add a subtle gold gradient (`linear-gradient(#D9B866, #B08A36)` with `background-clip: text`) on the hero names only.
 
@@ -97,22 +98,15 @@ These values are sampled from the photo. Before launch, hold the real card next 
 
 | Role | Card equivalent | Web font (Google Fonts) |
 |---|---|---|
-| Names, motto | Gold copperplate script | **Pinyon Script** (closest to the foil), fallback Great Vibes |
-| Section headings ("RSVP", "Dress Code") | Bold italic serif in gold | **Playfair Display**, 700 italic |
-| Body text, date line | Typewriter-style serif | **IBM Plex Mono** 400/500, or Courier Prime if its Vietnamese rendering looks right |
+| Names and section headings | Flowing invitation calligraphy | **Pinyon Script**, 400, fallback cursive |
+| Accent text | Light calligraphic lettering | **Pinyon Script**, 400 |
+| Body text, date line, navigation and buttons | Regular, readable invitation serif | **Libre Baskerville**, 400/700, fallback Georgia |
 
-**Vietnamese diacritics:** confirm that every chosen font renders *Trân trọng kính mời*, *Cùng với gia đình* and *Thứ Bảy* correctly, with no fallback-font glyphs, before you commit to it. Load only the weights you use, with `&display=swap`. Use the script font only for names and the motto, never for paragraphs or form text, because it's hard to read.
+Load only the weights and styles used, with `&display=swap`. Use the display family for headings, and the body family for paragraphs and form text.
 
-### 3.4 Bilingual text
+### 3.4 Language
 
-Mirror the invitation: English first, with Vietnamese on the next line, smaller and in `--mauve`/italic. Apply this to the hero lines, section headings and thank-you messages (form labels are English only), for example:
-
-```
-Together with their families
-Cùng với gia đình
-```
-
-Write it inline in the HTML. No i18n library and no language toggle. Claude drafts the Vietnamese from the invitation's wording, and **Trisa and family proofread it before launch**.
+All page copy, form labels, headings and thank-you messages are English only. Write the text inline in the HTML; no translation library or language toggle is needed.
 
 ### 3.5 Motifs (inline SVG and CSS, no image files)
 
@@ -128,17 +122,17 @@ Mobile-first, designed at 390 px wide. Desktop centers the content cards at a ma
 
 | # | Section | Background | Content | Photo |
 |---|---|---|---|---|
-| 1 | **Hero** | Photo, then an ivory card | Full-width photo, then an ivory card: "Together with their families / Cùng với gia đình", **Trisa Vo & Charles Neal** in gold script, "invite you to share in their wedding celebration / Trân trọng kính mời đến dự lễ cưới", "SATURDAY, JUNE 26, 2027 · 5:00 PM", and the current call-to-action button (Save the Date or RSVP) | **#48** (window, both smiling, greenery) |
+| 1 | **Hero** | Photo, then an ivory card | Full-width photo, then an ivory card: "Together with their families", **Trisa Vo & Charles Neal** in display serif, "invite you to share in their wedding celebration", "SATURDAY, JUNE 26, 2027 · 5:00 PM", and the current call-to-action button (Save the Date or RSVP) | **#48** (window, both smiling, greenery) |
 | 2 | **The Day** | Ivory card | Kim Son Restaurant, 10603 Bellaire Blvd, Houston, TX 77072, Google Maps link, 5:00 PM, **Dress Code: Cocktail Attire** | **#82** (ring), small and round-cropped |
 | 3 | **Us** (gallery) | Peony with embossed flowers | CSS grid, 2 columns on mobile and 3 on desktop, all `loading="lazy"`, rounded corners, thin ivory border like prints | **#5, #7, #81, #63** |
 | 4 | Travel & Stay, Registry, FAQ | Ivory cards | Added later (§8) | none |
-| 5 | **Footer** | Blush | *strength · belief · determination* in gold-deep script, charlesbneal2@gmail.com, "Photos by Yashar's Photos" | none |
+| 5 | **Footer** | Forest green | Single-color lotus, charlesbneal2@gmail.com, "Photos by Yashar's Photos" | none |
 
 **Save the Date (`/save-the-date/`)**
 
 | # | Section | Content | Photo |
 |---|---|---|---|
-| 1 | Header | "Save the Date / Xin hãy dành ngày", names in gold script, "June 26, 2027 · Houston, Texas" | **#24** (close-up) |
+| 1 | Header | "Save the Date", names in display serif, "June 26, 2027 · Houston, Texas" | **#24** (close-up) |
 | 2 | Form | Wine card styled like the RSVP card, with the address form (§4.1) | none |
 | 3 | Footer | Shared footer, plus a link to home to "see more" | none |
 
@@ -146,7 +140,7 @@ Mobile-first, designed at 390 px wide. Desktop centers the content cards at a ma
 
 | # | Section | Content | Photo |
 |---|---|---|---|
-| 1 | Header | "RSVP", names, "Saturday, June 26, 2027 · 5:00 PM · Kim Son Restaurant", "Dress Code: Cocktail Attire", "Kindly reply by May 26, 2027 / Vui lòng hồi âm trước ngày 26 tháng 5 năm 2027" (Vietnamese to be proofread) | **#5** (sofa portrait) |
+| 1 | Header | "RSVP", names, "Saturday, June 26, 2027 · 5:00 PM · Kim Son Restaurant", "Dress Code: Cocktail Attire", "Kindly reply by May 26, 2027" | **#5** (sofa portrait) |
 | 2 | Form | Wine card with the RSVP form (§4.2), or the "RSVPs open in April" notice before then | none |
 | 3 | Footer | Shared | none |
 
@@ -195,7 +189,7 @@ The address form lives on `/save-the-date/` and the RSVP form on `/rsvp/`. Both 
 | `note` | Note to the couple | textarea | | |
 | `website` | (hidden honeypot) | text, visually hidden, `tabindex="-1"` | | `off` |
 
-Success message: *"Thank you! Watch your mailbox for the invitation. 💌 / Cảm ơn bạn!"*
+Success message: *"Thank you! Watch your mailbox for the invitation. 💌"*
 
 ### 4.2 RSVP form: phase 2
 
@@ -289,27 +283,75 @@ The `:Zone.Identifier` files are Windows download markers created when files are
 
 ### 6.1 Google Sheet and Apps Script (once)
 
-1. Create a Google Sheet named **Wedding Responses** with two tabs:
+1. Use a Google Sheet named **trisaandcharleswedding_savethedate_address** with two tabs:
    - `Addresses`, with headers: `Timestamp, Name, Email, Phone, Address 1, Address 2, City, State, ZIP, Country, Guests, Note`
    - `RSVPs`, with headers: `Timestamp, Name, Email, Attending, Party, Guest Names, Dietary, Note`
-2. Open **Extensions → Apps Script**, paste in `Code.gs`, and save.
+2. Paste the current `apps-script/Code.gs` into Apps Script. Run
+   `setupWeddingResponses` and authorize it. It creates the named spreadsheet
+   once, stores `SPREADSHEET_ID` in Script Properties, and configures the headers.
+   To reuse a manually created spreadsheet, first set its ID as `SPREADSHEET_ID`
+   in Project Settings → Script Properties. Reruns preserve rows and reject
+   mismatched headers rather than overwriting them.
 3. Choose **Deploy → New deployment → Web app**. Set Execute as **Me** and Who has access to **Anyone**.
 4. Authorize it, then copy the `/exec` URL into `APPS_SCRIPT_URL` in `script.js`.
-5. Share the sheet with Trisa as an editor.
+5. Keep the spreadsheet private; share it only with the intended editors.
+   Verify an approved synthetic browser submission actually appears in
+   `Addresses` before enabling a guest launch. The selected site's submit button
+   remains disabled until a real `/exec` URL is configured.
 6. To update the script later, use **Deploy → Manage deployments → Edit → New version**. This keeps the same URL. Making a "New deployment" creates a new URL and breaks the forms.
 
-### 6.2 GitHub Pages (once)
+### 6.2 GitHub Pages release plan
 
-1. Commit the site files, including `CNAME`.
-2. In the repo, go to **Settings → Pages → Source: Deploy from a branch → `master` / root**.
-   - The repo is currently **private**. Make it public first (**Settings → General → Danger Zone → Change visibility**), because a free GitHub account only serves Pages from public repos. That's OK: guest data lives in the Google Sheet, not the repo. **Never commit exported address or RSVP CSVs.**
-3. Under **Settings → Pages → Custom domain**, enter `trisaandcharleswedding.com`.
-4. In your account's **Settings → Pages → Verified domains**, verify the domain with the TXT record GitHub gives you. This prevents domain takeover.
-5. Once DNS resolves, tick **Enforce HTTPS**. The certificate can take up to about an hour.
+`DEPLOYMENT.md` records the rollout order. The selected public Save the Date is
+curtain A at `/save-the-date/`, without Replay or an A/B picker. Keep home and
+RSVP routes intact. The original branch/root publishing idea is superseded by a
+curated static artifact so development pages and backend files are not included
+in the hosted site.
+
+The fork now exists and is verified. Pages activation was attempted and GitHub
+rejected it: "Your current plan does not support GitHub Pages for this repository."
+An approved eligible plan or an explicitly approved separate public deployment
+repository is needed before publication. No visibility or billing changes have
+been made.
+
+1. Authorize GitHub CLI as `trisavo`, create or verify its fork of
+   `charlesbneal2/wedding-website`, and confirm the fork's parent before pushing.
+   The source is private, so its fork remains private and cannot independently
+   become public. Verify administrator access to the fork and Pages eligibility. GitHub Free
+   supports Pages from public repositories; eligible paid plans can support
+   private repositories. Do not change visibility or purchase a plan implicitly.
+2. Prepare a GitHub Actions Pages workflow targeting `master`, initially using
+   manual dispatch. Set repository **Settings → Pages → Source → GitHub Actions**.
+   No framework or package build is needed.
+3. Package only `/`, `/save-the-date/`, `/rsvp/`, their required CSS/JavaScript,
+   favicon, and referenced optimized images. Exclude `apps-script/`, tests,
+   docs, palette study, original photos, and guest data. Review/commit the
+   intended release before pushing; local untracked files are not published
+   automatically.
+4. Use GitHub's configure-pages, upload-pages-artifact, and deploy-pages actions.
+   Give the deployment job `pages: write` and `id-token: write`, and use the
+   `github-pages` environment. Do not upload the entire working directory.
+5. In the repository owner's **account Settings → Pages**, add and verify the
+   domain using the supplied DNS TXT record. Keep that TXT record afterward.
+   Then set repository **Pages → Custom domain** to
+   `trisaandcharleswedding.com` before pointing web DNS to Pages.
+6. Publish the approved artifact, apply section 6.3, wait for the domain and
+   certificate checks, and enable **Enforce HTTPS**. Verify the canonical
+   save-the-date URL, home, RSVP, assets, and an actual browser-to-sheet save.
+
+The existing `CNAME` documents the intended domain but does not establish that
+Pages, DNS, domain ownership, or HTTPS is configured. Root-relative asset paths
+assume the custom domain's `/`; an unchanged `github.io/wedding-website/`
+project URL needs base-path support before it can serve as a preview.
 
 ### 6.3 DNS records in Squarespace
 
-Go to **Squarespace → Domains → trisaandcharleswedding.com → DNS → DNS Settings**. Delete the default Squarespace preset records (they point the domain at a Squarespace parking page), then add these as **Custom Records**:
+Keep the domain registered with Squarespace for the initial launch. Connecting
+web hosting does not require transferring the registration or nameservers.
+Open the Squarespace domains dashboard, select `trisaandcharleswedding.com`,
+then **DNS**. Save the current zone first. Replace only conflicting apex/`www`
+web-routing records with the values below; preserve MX, SPF, DKIM, DMARC, and
+unrelated records. Reauthenticate in Squarespace if prompted.
 
 | Type | Host | Value |
 |---|---|---|
@@ -321,10 +363,17 @@ Go to **Squarespace → Domains → trisaandcharleswedding.com → DNS → DNS S
 | AAAA | `@` | `2606:50c0:8001::153` |
 | AAAA | `@` | `2606:50c0:8002::153` |
 | AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `charlesbneal2.github.io` |
-| TXT | `_github-pages-challenge-charlesbneal2` | *(value from 6.2 step 4)* |
+| CNAME | `www` | `trisavo.github.io` *(verified fork owner; configure Pages before applying)* |
+| TXT | `_github-pages-challenge-trisavo` | *(exact name/value supplied by the owning GitHub account in 6.2 step 5)* |
 
-Also remove any domain forwarding set up under **Domains → Forwarding**.
+`www` points to the repository owner's `github.io` hostname, not a URL containing
+`/wedding-website`. If ownership changes, replace the owner-specific CNAME/TXT
+values with GitHub's actual instructions. Remove only forwarding that conflicts
+with the intended website. Do not add wildcard records.
+
+Squarespace advises allowing 24-48 hours for DNS changes to update. Verify
+records with PowerShell `Resolve-DnsName`, then verify HTTPS and redirects in a
+browser. Keep the domain registration and renewal active.
 
 ### 6.4 Verify the QR code (critical)
 
@@ -334,6 +383,37 @@ Also remove any domain forwarding set up under **Domains → Forwarding**.
   - Never move or redirect home away from `/`.
 - Test the URL on cellular data, on both iPhone and Android.
 - Submit one test entry through each form, confirm the row lands in the right tab, then delete it.
+
+### 6.5 Optional registrar transfer away from Squarespace
+
+GitHub Pages hosts the website; it is not a domain registrar. No destination
+registrar has been selected. Moving registration is optional and should not be
+combined with the initial web-host cutover.
+
+1. Choose the new registrar and preserve all current DNS records.
+2. In Squarespace's domains dashboard, select the domain and turn Domain Lock
+   off if available. A recent registration, transfer, or registrant-contact
+   change may impose a transfer lock; follow the account's displayed eligibility.
+3. Choose **Request transfer code**, reauthenticate, and retrieve the
+   authorization/EPP code from the registrant's email. Keep that code private.
+4. Start the incoming transfer with the chosen registrar and supply the code
+   there. Complete its confirmation steps; never commit or post the code.
+5. After completion, confirm nameservers, all website/mail DNS, renewal settings,
+   and HTTPS. Do not cancel the registration or lose its renewal.
+
+A locked domain can still be pointed to the new website while transfer
+eligibility is pending.
+
+### 6.6 Official deployment references
+
+Instructions and DNS values checked October 29, 2026:
+
+- GitHub Pages workflows: `https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages`
+- GitHub custom-domain DNS: `https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site`
+- GitHub domain verification: `https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages`
+- GitHub HTTPS: `https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https`
+- Squarespace DNS: `https://support.squarespace.com/hc/en-us/articles/360002101888-Edit-your-domain-s-DNS-records`
+- Squarespace transfers: `https://support.squarespace.com/hc/en-us/articles/205812338-Transferring-a-domain-away-from-Squarespace`
 
 ## 7. Day-to-Day Management
 
@@ -382,9 +462,9 @@ Also remove any domain forwarding set up under **Domains → Forwarding**.
 |---|---|
 | Venue | Kim Son, Bellaire location: 10603 Bellaire Blvd, Houston, TX 77072 |
 | Domain registrar | Squarespace Domains, using Squarespace DNS. Expires Sept 28, 2027 |
-| Hosting | Make the repo public and host on GitHub Pages (free) |
+| Hosting | GitHub Pages with a curated Actions artifact; verify plan/visibility eligibility before launch |
 | RSVP deadline | May 26, 2027 |
-| Vietnamese text | Claude drafts it; Trisa and family proofread |
+| Language | English only |
 | Envelope liner | Colors only. No toile pattern on the site |
 | Photos | Web use OK. Credit "Photos by Yashar's Photos" |
 | Contact email | charlesbneal2@gmail.com, shown in the footer and the form error message as a plain `mailto:` link |
