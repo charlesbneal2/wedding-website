@@ -239,6 +239,23 @@ server code. The database enforces everything:
 The **secret** key (in the untracked `.env`) bypasses RLS. Use it only from your
 own machine for admin scripts. Never put it in `script.js` or commit it.
 
+### 4.4a Admin page: `/admin/`
+
+A password-protected table of the `addresses` rows where you can edit any cell
+(Save per row), delete a row, filter by text and refresh.
+
+- **Login:** Supabase Auth, email + password. Create and manage the two logins in
+  the Supabase dashboard (Authentication → Users → Add user; set or reset the
+  password there). There is no sign-up form.
+- **Protection is in the database**, not the page: row-level security gives the
+  `authenticated` role select/update/delete on `addresses` (see `supabase/schema.sql`).
+  Without a login the same URL shows only the sign-in form and the API returns no rows.
+- **Public signups must stay off** (Authentication → Sign In / Providers → turn off
+  "Allow new users to sign up"). If they are on, any visitor could register and read
+  every address.
+- Edits are still checked by the table constraints (length, email format, US ZIP).
+- The page is `noindex` and is published with the rest of the site.
+
 ### 4.5 Spam and duplicates
 
 - The honeypot stops most bots. Add Cloudflare Turnstile only if spam actually shows up.
@@ -250,6 +267,7 @@ own machine for admin scripts. Never put it in `script.js` or commit it.
 index.html                # home
 save-the-date/index.html  # address form
 rsvp/index.html           # RSVP form
+admin/index.html          # password-protected address table (admin.js)
 style.css
 script.js                 # form handler, shared by both forms
 CNAME                     # contains: trisaandcharleswedding.com
@@ -278,10 +296,11 @@ The `:Zone.Identifier` files are Windows download markers created when files are
 2. Copy **Project URL** and the **publishable** key (Settings → API Keys) into
    `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` at the top of `script.js`. Both
    are public by design. Keep the **secret** key only in `.env` (gitignored).
-3. Submit one synthetic address from the live page and confirm it appears in
+3. Create your logins for `/admin/` (Authentication → Users → Add user) and switch off public signups (see §4.4a).
+4. Submit one synthetic address from the live page and confirm it appears in
    **Table Editor → addresses** before sharing the link with guests.
-4. View/export: Table Editor → addresses → **Export → CSV**.
-5. Optional: Supabase free projects pause after about a week of inactivity.
+5. View/export: Table Editor → addresses → **Export → CSV**.
+6. Optional: Supabase free projects pause after about a week of inactivity.
    Sharing the link or opening the dashboard keeps it awake; check it before launch.
 
 ### 6.2 GitHub Pages release plan

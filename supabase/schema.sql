@@ -23,3 +23,18 @@ grant insert on public.addresses to anon;
 drop policy if exists "anyone can submit an address" on public.addresses;
 create policy "anyone can submit an address" on public.addresses
   for insert to anon with check (true);
+
+-- Admin page (/admin): signed-in users (you and your partner, created by hand in
+-- Authentication -> Users) can read, edit and delete addresses. Public signups
+-- MUST stay off (Authentication -> Sign In / Providers -> "Allow new users to
+-- sign up"), otherwise any visitor could create an account and read everything.
+grant select, update, delete on public.addresses to authenticated;
+drop policy if exists "admins read addresses" on public.addresses;
+create policy "admins read addresses" on public.addresses
+  for select to authenticated using (true);
+drop policy if exists "admins edit addresses" on public.addresses;
+create policy "admins edit addresses" on public.addresses
+  for update to authenticated using (true) with check (true);
+drop policy if exists "admins delete addresses" on public.addresses;
+create policy "admins delete addresses" on public.addresses
+  for delete to authenticated using (true);

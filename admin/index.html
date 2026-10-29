@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Admin · Trisa & Charles</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+  body { margin: 0; padding: 1.5rem; font: 15px/1.5 system-ui, sans-serif; color: #2b2b2b; background: #faf7f2; }
+  h1 { margin: 0 0 1rem; font-size: 1.3rem; }
+  form.login { max-width: 320px; margin: 15vh auto 0; display: grid; gap: .75rem; }
+  input, button { font: inherit; padding: .45rem .6rem; border: 1px solid #b9b2a6; border-radius: 4px; background: #fff; }
+  button { cursor: pointer; background: #57223b; border-color: #57223b; color: #fff; }
+  button.secondary { background: #fff; color: #57223b; }
+  button.danger { background: #fff; color: #a3261d; border-color: #a3261d; }
+  button:disabled { opacity: .5; cursor: default; }
+  .bar { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  .bar .grow { flex: 1; min-width: 12rem; }
+  .msg { min-height: 1.4rem; margin: 0 0 .5rem; }
+  .msg.err { color: #a3261d; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; background: #fff; }
+  th, td { padding: .3rem; border-bottom: 1px solid #e4ded3; text-align: left; vertical-align: middle; white-space: nowrap; }
+  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
+  td input { width: 100%; min-width: 7rem; border-color: transparent; background: transparent; }
+  td input:hover { border-color: #d8d1c4; }
+  td input:focus { border-color: #57223b; background: #fff; }
+  tr.dirty td input.changed { background: #fff6d6; }
+  td.date { font-size: .8rem; color: #777; padding-right: .75rem; }
+  td.actions { display: flex; gap: .4rem; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<form class="login" id="login" hidden>
+  <h1>Admin sign in</h1>
+  <input name="email" type="email" placeholder="Email" autocomplete="username" required>
+  <input name="password" type="password" placeholder="Password" autocomplete="current-password" required>
+  <button type="submit">Sign in</button>
+  <p class="msg err" id="login-msg" role="alert"></p>
+</form>
+
+<main id="app" hidden>
+  <div class="bar">
+    <h1 style="margin:0">Addresses <span id="count"></span></h1>
+    <input class="grow" id="filter" type="search" placeholder="Filter by any text" aria-label="Filter rows">
+    <button class="secondary" id="refresh" type="button">Refresh</button>
+    <button class="secondary" id="logout" type="button">Sign out</button>
+  </div>
+  <p class="msg" id="msg" role="status"></p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>Received</th><th>Name</th><th>Email</th><th>Street</th><th>Apt / Unit</th>
+        <th>City</th><th>State</th><th>ZIP</th><th>Country</th><th></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/admin/admin.js"></script>
+</body>
+</html>
