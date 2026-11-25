@@ -1,12 +1,16 @@
 name: Keep Supabase awake
 
-# Free Supabase projects pause after about a week without activity.
+# Free Supabase projects pause unless they get "a few user requests to the
+# database each day". Two runs of three leaves room for GitHub skipping one.
+# https://supabase.com/docs/guides/platform/free-project-pausing
 on:
   schedule:
-    - cron: '17 12 */2 * *'
+    - cron: '17 */12 * * *'
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: read
+  actions: write # only to re-enable this workflow, below
 
 jobs:
   ping:
@@ -16,11 +20,22 @@ jobs:
         with:
           sparse-checkout: script.js
           sparse-checkout-cone-mode: false
-      # The public key can't read rows, so a healthy database answers 401 with
-      # Postgres error 42501. A paused project answers with something else.
+          persist-credentials: false
+      # Inserting an empty list runs a real, successful query (201) as the public
+      # role but adds no rows. A paused or broken project answers something else.
       - run: |
           url=$(grep -oP "SUPABASE_URL = '\K[^']+" script.js)
           key=$(grep -oP "SUPABASE_PUBLISHABLE_KEY = '\K[^']+" script.js)
-          body=$(curl -sS --max-time 30 "$url/rest/v1/addresses?select=id&limit=1" -H "apikey: $key")
-          echo "$body"
-          echo "$body" | grep -q 42501
+          for i in 1 2 3; do
+            status=$(curl -sS --max-time 30 --retry 3 -o body -w '%{http_code}' \
+              "$url/rest/v1/addresses?columns=name" -H "apikey: $key" \
+              -H 'Content-Type: application/json' -H 'Prefer: return=minimal' -d '[]')
+            echo "$status $(cat body)"
+            [ "$status" = 201 ]
+          done
+      # GitHub disables schedules after 60 days without commits in a public repo.
+      # Enabling the workflow again resets that clock.
+      - if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/$GITHUB_REPOSITORY/actions/workflows/keep-supabase-awake.yml/enable"
